@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>基于深度学习的超透镜亚衍射极限图案的超分辨率成像</title>
+      <link href="/2024/07/29/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E8%B6%85%E9%80%8F%E9%95%9C%E4%BA%9A%E8%A1%8D%E5%B0%84%E6%9E%81%E9%99%90%E5%9B%BE%E6%A1%88%E7%9A%84%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F/"/>
+      <url>/2024/07/29/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E8%B6%85%E9%80%8F%E9%95%9C%E4%BA%9A%E8%A1%8D%E5%B0%84%E6%9E%81%E9%99%90%E5%9B%BE%E6%A1%88%E7%9A%84%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F/</url>
+      
+        <content type="html"><![CDATA[<h1 id="论文主体思路"><a href="#论文主体思路" class="headerlink" title="论文主体思路"></a>论文主体思路</h1><ol><li>通过时域有限差分法(FDTD)仿真生成随机样本的近场数据。然后，利用傅里叶光学得到远场衍射图。采用深度学习方法从远场强度重建近场强度。</li><li>利用条件生成对抗网络(cGAN)在带宽非相干照明下获得任意纳米尺度图案的超分辨率图像。</li></ol><h2 id="超透镜理论"><a href="#超透镜理论" class="headerlink" title="超透镜理论"></a>超透镜理论</h2><ol><li><p>超透镜是一种基于超材料的透镜，它可以利用表面等离子体现象增强纳米级物体产生的倏逝波。</p></li><li><p>局域等离子体结构照明显微镜是一种利用超透镜增强的倏逝波随照明位移成像的超分辨率显微镜。</p></li><li><p>传统光学显微镜的分辨率受限于衍射极限，原因是高频空间信息（例如样品的细小结构）会以倏逝波（evanescent waves）的形式存在，这些波在传播过程中迅速衰减，无法被普通透镜收集到。超透镜通过使用负折射率材料，可以增强这些倏逝波，使它们重新传播，从而捕获更多的高频信息，实现比衍射极限更高的分辨率。</p></li><li><p>超透镜是一种将亚波长光栅集成到银薄膜中的装置。远场超透镜(FSL)选择性地放大近场亚波长物体的倏逝波，将倏逝波转换为传播波，并被物镜收集。</p><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202407291402212.png"></p><ol start="5"><li><p>周期光栅可以通过衍射过程将倏逝波耦合为传播波，公式如下：</p><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202407291408055.png"></p></li><li><p>透射光栅上方和透射前的电场角谱关系表达式：</p><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202407291417238.png"></p></li><li><p>周期物体的投影远场条纹可以用下面的公式来解释：</p><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202407291429026.png"></p></li></ol></li></ol><h1 id="附录与补遗"><a href="#附录与补遗" class="headerlink" title="附录与补遗"></a>附录与补遗</h1><h2 id="衍射极限"><a href="#衍射极限" class="headerlink" title="衍射极限"></a>衍射极限</h2><ol><li>衍射极限（Diffraction Limit）是光学成像系统中的一个基本物理限制，主要由物镜的数值孔径（Numerical Aperture, NA）和倏逝波（evanescent wave）无法传播的性质决定的。(衍射极限是物镜的数值孔径和携带样品高频信息的倏逝分量的不传播问题所造成的物理约束)</li><li>d &#x3D; λ&#x2F;2NA，数值孔径由物镜的孔径和光在介质中的折射率决定。较大的数值孔径和较短的波长可以提高分辨率。</li></ol><h2 id="零均值归一化互相关系数-ZNCC"><a href="#零均值归一化互相关系数-ZNCC" class="headerlink" title="零均值归一化互相关系数(ZNCC)"></a>零均值归一化互相关系数(ZNCC)</h2><ul><li>零均值归一化互相关(Zero Mean Normalized Cross-Correlation, ZNCC)值用于证明生成的数据(通过训练后的网络重建)与真实空间中真实值的相似度。</li><li>ZNCC用于评估两个图像块（通常是模板和搜索区域）之间的相似度，通过消除亮度和对比度的影响来提高匹配的鲁棒性。</li></ul><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202407291351074.png"></p><h1 id="关于文献"><a href="#关于文献" class="headerlink" title="关于文献"></a>关于文献</h1><h2 id="题目及期刊"><a href="#题目及期刊" class="headerlink" title="题目及期刊"></a>题目及期刊</h2><p>题目：Super‑Resolution Imaging of Sub‑diffraction‑Limited Pattern with Superlens Based on Deep Learning</p><p>​            基于深度学习的超透镜亚衍射极限图案的超分辨率成像</p><p>期刊：Regular Paper(二区)</p><h2 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h2><p>作者：Yizhao Guan</p><h2 id="发表时间"><a href="#发表时间" class="headerlink" title="发表时间"></a>发表时间</h2><p>日期：2024年3月5日</p><h2 id="阅读时间"><a href="#阅读时间" class="headerlink" title="阅读时间"></a>阅读时间</h2><p>日期：2024年7月29日</p><h2 id="开源代码"><a href="#开源代码" class="headerlink" title="开源代码"></a>开源代码</h2><p>无</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 文献阅读 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 深度学习 </tag>
+            
+            <tag> 超透镜 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>基于深度学习的光学像差估计实现离线数字自适应光学和超分辨率成像</title>
       <link href="/2024/07/26/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%85%89%E5%AD%A6%E5%83%8F%E5%B7%AE%E4%BC%B0%E8%AE%A1%E5%AE%9E%E7%8E%B0%E7%A6%BB%E7%BA%BF%E6%95%B0%E5%AD%97%E8%87%AA%E9%80%82%E5%BA%94%E5%85%89%E5%AD%A6%E5%92%8C%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F/"/>
       <url>/2024/07/26/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%85%89%E5%AD%A6%E5%83%8F%E5%B7%AE%E4%BC%B0%E8%AE%A1%E5%AE%9E%E7%8E%B0%E7%A6%BB%E7%BA%BF%E6%95%B0%E5%AD%97%E8%87%AA%E9%80%82%E5%BA%94%E5%85%89%E5%AD%A6%E5%92%8C%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F/</url>
