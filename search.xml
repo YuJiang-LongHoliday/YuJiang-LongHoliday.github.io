@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>用于远场超分辨率成像的一维斐波那契光栅</title>
+      <link href="/2024/09/22/%E7%94%A8%E4%BA%8E%E8%BF%9C%E5%9C%BA%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F%E7%9A%84%E4%B8%80%E7%BB%B4%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E5%85%89%E6%A0%85/"/>
+      <url>/2024/09/22/%E7%94%A8%E4%BA%8E%E8%BF%9C%E5%9C%BA%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F%E7%9A%84%E4%B8%80%E7%BB%B4%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E5%85%89%E6%A0%85/</url>
+      
+        <content type="html"><![CDATA[<h1 id="论文主体思路"><a href="#论文主体思路" class="headerlink" title="论文主体思路"></a>论文主体思路</h1><h2 id="论文主要贡献"><a href="#论文主要贡献" class="headerlink" title="论文主要贡献"></a>论文主要贡献</h2><ol><li>利用一维斐波那契光栅将倏逝波转换为传播波，实现远场超分辨成像。</li><li>通过在自由空间中检测光穿过斐波那契光栅前物体的远场强度分布，我们可以观察到接近λ∕9的空间分辨率的物体。</li><li>利用 Fibonacci 光栅模拟了光栅对频谱的调制过程，然后通过反卷积重构物体信息，该研究成果理论论证了光栅能对频谱进行调制，然后通过反卷积重构物体信息研究方案的可行性</li></ol><h2 id="远场超分辨成像理论"><a href="#远场超分辨成像理论" class="headerlink" title="远场超分辨成像理论"></a>远场超分辨成像理论</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409221455509.png"></p><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409221602285.png"></p><h2 id="斐波那契光栅成像系统方案"><a href="#斐波那契光栅成像系统方案" class="headerlink" title="斐波那契光栅成像系统方案"></a>斐波那契光栅成像系统方案</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409221606330.png"></p><ol><li><p>(a)斐波那契光栅成像系统方案。</p><p>(b)计算斐波那契光栅0(红色虚线)−1(蓝色实线)和1(绿色虚线)阶的衍射效率。</p><p>(c)和(d)分别计算光通过放置在斐波那契光栅前和自由空间的两线物体的灰度强度分布。</p><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409221630769.png"></p></li></ol><h2 id="其余图示"><a href="#其余图示" class="headerlink" title="其余图示"></a>其余图示</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409231009924.png"></p><ol><li>图2(a)显示了三个物体的强度分布，其对应的截面如图2(d)所示(黑色虚线)。在检索过程中，我们假设光的场强是非负的，并且被观察的物体被放置在光栅的中心，以避免场分布的不对称，这可能导致反卷积操作的误差。</li><li>图2(b)为检索到的目标图像的灰度分布。我们看到，物体的两条线的间距分别为70、105和145 nm。其对应截面如图2(d)(红色实线)所示。</li><li>图2(c)分别使用斐波那契光栅系统和周期光栅系统重建物体的灰度分布。</li><li>图2(d)物体强度分布的对应截面(黑色虚线)和它们的检索图像分别为斐波那契光栅(红色实线)和周期光栅(蓝色圆点线)。</li></ol><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409231012104.png"></p><ol><li>图3(a)采样间隔为5 nm(红色实线)、300 nm(绿色实圆)时检测平面光场强度截面及其拟合曲线(蓝色虚线)。</li><li>图3(b)以λ&#x2F;9空间为采样间隔，分别为5 nm(红色实线)和300 nm(蓝色圆点线)的双线物体重构图像的横截面。</li></ol><h1 id="附录与补遗"><a href="#附录与补遗" class="headerlink" title="附录与补遗"></a>附录与补遗</h1><h2 id="周期性光栅的缺陷"><a href="#周期性光栅的缺陷" class="headerlink" title="周期性光栅的缺陷"></a>周期性光栅的缺陷</h2><ol><li>超出衍射极限的高空间分辨率光学成像需要由倏逝波携带目标信息，倏逝波随距离目标呈指数衰减，仅在近场可探测到。</li><li>周期光栅辅助远场超分辨成像系统存在一个关键缺陷，即物体某些空间频率的精细特征无法被提取。这是由于周期光栅在频域只能产生固定的、不连续的频移，导致无法获取对象的部分特征。此外，多角度照明或多方向采集也影响了成像速度。与基于周期光栅的显微镜相比，我们的准周期结构可以产生频谱的准连续位移，从而避免了丢失部分亚波长信息的情况。最后，讨论了采样误差对检索图像分辨率的影响。</li></ol><h1 id="关于文献"><a href="#关于文献" class="headerlink" title="关于文献"></a>关于文献</h1><h2 id="题目及期刊"><a href="#题目及期刊" class="headerlink" title="题目及期刊"></a>题目及期刊</h2><p>题目：One-dimensional Fibonacci grating for far-field super-resolution imaging</p><p>用于远场超分辨率成像的一维斐波那契光栅</p><p>期刊：Opt Lett(OL)</p><h2 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h2><p>作者：K. Wu , G. P. Wang</p><h2 id="发表时间"><a href="#发表时间" class="headerlink" title="发表时间"></a>发表时间</h2><p>日期：2013年</p><h2 id="阅读时间"><a href="#阅读时间" class="headerlink" title="阅读时间"></a>阅读时间</h2><p>日期：2024年9月21日</p><h2 id="开源代码及其它"><a href="#开源代码及其它" class="headerlink" title="开源代码及其它"></a>开源代码及其它</h2><p>GitHub：无</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 文献阅读 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 光栅 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>锯齿相位衍射光栅光子射流阵列的首次实验观察</title>
       <link href="/2024/09/20/%E9%94%AF%E9%BD%BF%E7%9B%B8%E4%BD%8D%E8%A1%8D%E5%B0%84%E5%85%89%E6%A0%85%E5%85%89%E5%AD%90%E5%B0%84%E6%B5%81%E9%98%B5%E5%88%97%E7%9A%84%E9%A6%96%E6%AC%A1%E5%AE%9E%E9%AA%8C%E8%A7%82%E5%AF%9F/"/>
       <url>/2024/09/20/%E9%94%AF%E9%BD%BF%E7%9B%B8%E4%BD%8D%E8%A1%8D%E5%B0%84%E5%85%89%E6%A0%85%E5%85%89%E5%AD%90%E5%B0%84%E6%B5%81%E9%98%B5%E5%88%97%E7%9A%84%E9%A6%96%E6%AC%A1%E5%AE%9E%E9%AA%8C%E8%A7%82%E5%AF%9F/</url>
