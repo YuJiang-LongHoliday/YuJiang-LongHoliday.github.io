@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>用于远场超分辨率成像的二维斐波那契光栅</title>
+      <link href="/2024/09/24/%E7%94%A8%E4%BA%8E%E8%BF%9C%E5%9C%BA%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F%E7%9A%84%E4%BA%8C%E7%BB%B4%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E5%85%89%E6%A0%85/"/>
+      <url>/2024/09/24/%E7%94%A8%E4%BA%8E%E8%BF%9C%E5%9C%BA%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F%E7%9A%84%E4%BA%8C%E7%BB%B4%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E5%85%89%E6%A0%85/</url>
+      
+        <content type="html"><![CDATA[<h1 id="论文主体思路"><a href="#论文主体思路" class="headerlink" title="论文主体思路"></a>论文主体思路</h1><h2 id="论文主要贡献"><a href="#论文主要贡献" class="headerlink" title="论文主要贡献"></a>论文主要贡献</h2><ol><li>通过在自由空间中一次性检测光场穿过二维斐波那契光栅前物体的远场强度分布，可以检索到空间分辨率超过λ&#x2F;7的物体图像。</li><li>空间分辨率表征成像系统的最小可分辨能力，一般认为二维(2D)系统为0.61λ&#x2F;NA，一维(1D)系统为0.5λ&#x2F;NA。</li><li>亚波长结构用于将前方物体的倏逝波转换为远场探测所需的传播波。此外，这种亚波长结构还可以产生倏逝波，照亮分辨率以下尺度的物体，从而进一步从物体的散射光或衍射光中获取超分辨率图像。</li><li>周期亚波长光栅的一个关键缺陷，它只能产生固定的相移，使频域不连续。为了克服这一缺点，可以使用一种准周期亚波长光栅在频域内产生准连续位移。由于空间频域是连续的，在一定空间频率范围内丢失的亚波长信息可以被携带到远场区域。因此，可以利用远场检测信息重建超分辨率图像。</li><li>本文提出了一种用于自由空间远场超分辨率成像的二维斐波那契光栅辅助显微镜。采用严格耦合波分析(RCWA)方法对二维斐波那契光栅进行设计和优化，将二维物体的倏逝波转化为传播波。通过一次测量远场光强分布，我们可以通过傅里叶光学方法和时域有限差分(FDTD)数值模拟方法重建空间分辨率超过λ&#x2F;7的样品物体图像。与用于扩展一维空间频率轴连续的一维斐波那契光栅辅助显微镜相比，我们的二维斐波那契光栅可以使二维空间频率圆平面上的频域连续。因此，所有低于该分辨率的具有不同亚波长细节的二维图像都可以被分辨出来。</li></ol><h2 id="基础理论"><a href="#基础理论" class="headerlink" title="基础理论"></a>基础理论</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409241005367.png"></p><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409241915169.png"></p><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409241937411.png"></p><h2 id="二维斐波那契光栅理论设计"><a href="#二维斐波那契光栅理论设计" class="headerlink" title="二维斐波那契光栅理论设计"></a>二维斐波那契光栅理论设计</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409241940636.png"></p><ol><li>每个光栅单元都是亚波长块，因此光栅将显示出与偏振无关的正常入射响应20。在每一行和每一列中，沿着x´和y´方向，两个基本单位以斐波那契级数的形式排列为“…abaababababababab…”。</li></ol><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409242013188.png"></p><h2 id="相干光照条件下仿真结果"><a href="#相干光照条件下仿真结果" class="headerlink" title="相干光照条件下仿真结果"></a>相干光照条件下仿真结果</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409242013803.png"></p><ol><li>相干光照下二维斐波那契光栅超分辨率成像的仿真结果。(A、D)分别间隔90nm和70nm的3×3-point-array物体灰度分布。(B)和(E)分别为A和D波长为632nm的相干光照射下的模拟原始图像。(C、F)分别计算A、D重建过程后的分辨图像光强分布。</li></ol><h2 id="非相干光照条件下仿真结果"><a href="#非相干光照条件下仿真结果" class="headerlink" title="非相干光照条件下仿真结果"></a>非相干光照条件下仿真结果</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409242020516.png"></p><ol><li>非相干光照条件下二维斐波那契光栅超分辨率成像的仿真结果。(A、C)分别间隔90nm、170nm的3×3-point-array物体模拟关节原始图像。(B、D)分别计算A、D重建过程后的分辨图像光强分布。</li></ol><h2 id="反卷积过程"><a href="#反卷积过程" class="headerlink" title="反卷积过程"></a>反卷积过程</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409242037027.png"></p><h1 id="附录与补遗"><a href="#附录与补遗" class="headerlink" title="附录与补遗"></a>附录与补遗</h1><h2 id="论文中可以引用的部分"><a href="#论文中可以引用的部分" class="headerlink" title="论文中可以引用的部分"></a>论文中可以引用的部分</h2><p>无。</p><h1 id="关于文献"><a href="#关于文献" class="headerlink" title="关于文献"></a>关于文献</h1><h2 id="题目及期刊"><a href="#题目及期刊" class="headerlink" title="题目及期刊"></a>题目及期刊</h2><p>题目：Two-dimensional Fibonacci grating for far-field super-resolution imaging</p><p>用于远场超分辨率成像的二维斐波那契光栅</p><p>期刊：Sci Rep</p><h2 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h2><p>作者：K. Wu , G. P. Wang</p><h2 id="发表时间"><a href="#发表时间" class="headerlink" title="发表时间"></a>发表时间</h2><p>日期：2016年</p><h2 id="阅读时间"><a href="#阅读时间" class="headerlink" title="阅读时间"></a>阅读时间</h2><p>日期：2024年9月24日</p><h2 id="开源代码及其它"><a href="#开源代码及其它" class="headerlink" title="开源代码及其它"></a>开源代码及其它</h2><p>GitHub：无</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 文献阅读 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 光栅 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>远场超透镜用于亚衍射光学成像的实验研究</title>
       <link href="/2024/09/23/%E8%BF%9C%E5%9C%BA%E8%B6%85%E9%80%8F%E9%95%9C%E7%94%A8%E4%BA%8E%E4%BA%9A%E8%A1%8D%E5%B0%84%E5%85%89%E5%AD%A6%E6%88%90%E5%83%8F%E7%9A%84%E5%AE%9E%E9%AA%8C%E7%A0%94%E7%A9%B6/"/>
       <url>/2024/09/23/%E8%BF%9C%E5%9C%BA%E8%B6%85%E9%80%8F%E9%95%9C%E7%94%A8%E4%BA%8E%E4%BA%9A%E8%A1%8D%E5%B0%84%E5%85%89%E5%AD%A6%E6%88%90%E5%83%8F%E7%9A%84%E5%AE%9E%E9%AA%8C%E7%A0%94%E7%A9%B6/</url>
