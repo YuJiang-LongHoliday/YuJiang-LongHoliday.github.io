@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>未经训练的神经网络实现快速和通用的结构照明显微镜</title>
+      <link href="/2024/10/07/%E6%9C%AA%E7%BB%8F%E8%AE%AD%E7%BB%83%E7%9A%84%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0%E5%BF%AB%E9%80%9F%E5%92%8C%E9%80%9A%E7%94%A8%E7%9A%84%E7%BB%93%E6%9E%84%E7%85%A7%E6%98%8E%E6%98%BE%E5%BE%AE%E9%95%9C/"/>
+      <url>/2024/10/07/%E6%9C%AA%E7%BB%8F%E8%AE%AD%E7%BB%83%E7%9A%84%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AE%9E%E7%8E%B0%E5%BF%AB%E9%80%9F%E5%92%8C%E9%80%9A%E7%94%A8%E7%9A%84%E7%BB%93%E6%9E%84%E7%85%A7%E6%98%8E%E6%98%BE%E5%BE%AE%E9%95%9C/</url>
+      
+        <content type="html"><![CDATA[<h1 id="论文主体思路"><a href="#论文主体思路" class="headerlink" title="论文主体思路"></a>论文主体思路</h1><ol><li>SIM需要多个原始结构照明(SI)帧来重建超分辨率(SR)图像，特别是散斑SIM的重建需要数百个SI帧，耗时较长。</li><li>本文提出了一种具有已知照明模式的未经训练的结构化照明重建神经网络(USRNN)，以将散斑SIM重建所需的原始数据量减少20倍，从而提高其时间分辨率。利用无监督优化策略和CNN的结构先验，在不需要数据集的情况下从网络中获取高频信息;</li><li>SIM使用空间调制的结构照明(SI)模式来照亮样品，样品的高频成分被不均匀的照明模式转移到显微镜的可检测域。为了恢复重叠的频率分量并获得最终的SR结果，需要相机依次捕获样品的一系列原始图像帧。多帧采集降低了成像速度，增加了曝光剂量，导致时间分辨率下降和光漂白。</li><li>未经训练的神经网络在数据集独立性方面具有优越的性能，通常用于正弦SIM重构、帧减少和分辨率增强等领域。</li></ol><h2 id="USRNN网络架构"><a href="#USRNN网络架构" class="headerlink" title="USRNN网络架构"></a>USRNN网络架构</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202410081029869.png"></p><ol><li>USRNN的框架。在前向传播过程中，首先将随机噪声图像输入到网络中生成初始输出图像(y)，然后将已知的照明模式(patterni, i &#x3D; 1)输入到网络中。N)，测得的图像帧(xi, i &#x3D; 1…N)，初始y输入目标函数。在接下来的反向传播过程中，根据目标函数的偏导数更新网络的权值，完成一次迭代。这个迭代一直持续，直到得到最优的输出图像。整个优化过程采用梯度下降法求解，求出目标函数的最小值。</li></ol><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202410091056950.png"></p><ul><li>其中y为网络的输出，PSF为光学成像系统的点扩展函数，pattern i (i &#x3D; 1…N)是第i个SI模式， x i (i &#x3D; 1…N)为第i个SI图像帧。损失矩阵L2 和Hessian矩阵R Hessian分别对应于物理约束和连续性约束，并通过权重β来平衡它们以保证最优输出。前者计算真实SI帧x i (i &#x3D; 1…N)之间的均方误差。和模拟输入帧，后者可表示为</li></ul><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202410091106936.png"></p><ul><li>式中，Dxx、Dyy、Dxy分别是图像y在水平、垂直、对角三个轴上的离散二阶导数。给定N幅SI图像帧和相应的模式，可以确定目标函数的初始值，经过迭代下降过程，得到最优SR结果。利用物理和网络结构先验，采用无监督迭代优化过程，可以用较少的帧数恢复原始高频信息。</li></ul><h2 id="不同模式照射下模拟星状样品的重建"><a href="#不同模式照射下模拟星状样品的重建" class="headerlink" title="不同模式照射下模拟星状样品的重建"></a>不同模式照射下模拟星状样品的重建</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202410081101888.png"></p><ol><li>不同模式照射下模拟星状样品的重建。(a)地真星样和模拟宽视场图像。(b) USRNN重建的散斑图案和SIM图像。(c) USRNN重构的正弦模式和SIM图像。(d)傅里叶变换值与半径R的对比，黑色虚线表示瑞利准则。</li></ol><h2 id="散斑照明下100-nm荧光纳米粒子的实验结果"><a href="#散斑照明下100-nm荧光纳米粒子的实验结果" class="headerlink" title="散斑照明下100 nm荧光纳米粒子的实验结果"></a>散斑照明下100 nm荧光纳米粒子的实验结果</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202410091311686.png"></p><ul><li>散斑照明下100 nm荧光纳米粒子的实验结果。(a) USRNN重构的宽视场图像和SIM图像。(b)图(a)宽视场和USRNN下感兴趣区域(白虚线框)的放大图像。(c)图(b)中沿白线的强度分布图。(d)宽视场与USRNN的统计分辨率比较，分别通过计算半最大值时的全宽度(FWHM) (n &#x3D; 10)得到各自的值。比例尺，2µm in (a)和400 nm in (b)</li></ul><h2 id="斑点光照下COS-7细胞线粒体的实验结果"><a href="#斑点光照下COS-7细胞线粒体的实验结果" class="headerlink" title="斑点光照下COS-7细胞线粒体的实验结果"></a>斑点光照下COS-7细胞线粒体的实验结果</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202410091313889.png"></p><ul><li>斑点光照下COS-7细胞线粒体的实验结果。(a)未经预处理&#x2F;预处理后USRNN重构的宽视场图像和SIM图像。(b)图(a)中感兴趣区域(白虚线框)在不同模式下的放大图像。(c)面板(b)中沿白线的强度分布图。比例尺，2µm in (a)和300 nm in (b)。</li></ul><h2 id="论文主要贡献"><a href="#论文主要贡献" class="headerlink" title="论文主要贡献"></a>论文主要贡献</h2><h1 id="附录与补遗"><a href="#附录与补遗" class="headerlink" title="附录与补遗"></a>附录与补遗</h1><h2 id="半最大值平均全宽度"><a href="#半最大值平均全宽度" class="headerlink" title="半最大值平均全宽度"></a>半最大值平均全宽度</h2><ul><li>半最大值平均全宽度（Full Width at Half Maximum，简称 FWHM）是用于描述函数或曲线特征宽度的一种度量。具体来说，它表示曲线从最大值下降到一半最大值处的两个点之间的距离，通常用于表示曲线的“宽度”或“扩展程度”。FWHM 常用于分析各种科学领域中的峰形信号，如光谱学、信号处理、生物学成像等。</li><li>在 FWHM 中，“半最大值”指的是峰值的一半，“全宽度”是指在这个半最大值处的宽度。因此，FWHM 提供了一个标准化的方式来比较不同曲线的宽度，无论它们的形状是否相同。例如，在光谱分析中，可以用 FWHM 来比较不同信号峰的锐度或分辨率。</li></ul><h2 id="论文中可以引用的部分"><a href="#论文中可以引用的部分" class="headerlink" title="论文中可以引用的部分"></a>论文中可以引用的部分</h2><p>无。</p><h1 id="关于文献"><a href="#关于文献" class="headerlink" title="关于文献"></a>关于文献</h1><h2 id="题目及期刊"><a href="#题目及期刊" class="headerlink" title="题目及期刊"></a>题目及期刊</h2><p>题目：Untrained neural network enabling fast and universal structured-illumination microscopy</p><p>未经训练的神经网络实现快速和通用的结构照明显微镜</p><p>期刊：OL</p><h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><ul><li>Ye, Zitong, et al. “Untrained Neural Network Enabling Fast and Universal Structured-Illumination Microscopy.” Optics Letters 49.9 (2024): 2205-08. Print.</li></ul><h2 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h2><p>作者：Zitong Ye, Xiaoyan Li, Yile Sun</p><h2 id="发表时间"><a href="#发表时间" class="headerlink" title="发表时间"></a>发表时间</h2><p>日期：2024年</p><h2 id="阅读时间"><a href="#阅读时间" class="headerlink" title="阅读时间"></a>阅读时间</h2><p>日期：2024年10月7日</p><h2 id="开源代码及其它"><a href="#开源代码及其它" class="headerlink" title="开源代码及其它"></a>开源代码及其它</h2><p>GitHub：<a href="https://github.com/ZJUOPTKuangLab/USRNN">https://github.com/ZJUOPTKuangLab/USRNN</a> (作者)</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 文献阅读 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 深度学习 </tag>
+            
+            <tag> SIM </tag>
+            
+            <tag> U-Net </tag>
+            
+            <tag> 无监督学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>用于远场超分辨率成像的二维斐波那契光栅</title>
       <link href="/2024/09/24/%E7%94%A8%E4%BA%8E%E8%BF%9C%E5%9C%BA%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F%E7%9A%84%E4%BA%8C%E7%BB%B4%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E5%85%89%E6%A0%85/"/>
       <url>/2024/09/24/%E7%94%A8%E4%BA%8E%E8%BF%9C%E5%9C%BA%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F%E7%9A%84%E4%BA%8C%E7%BB%B4%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E5%85%89%E6%A0%85/</url>
