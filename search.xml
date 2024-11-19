@@ -24,6 +24,8 @@
             
             <tag> SIM </tag>
             
+            <tag> 物理先验 </tag>
+            
             <tag> 点扩散函数(PSF) </tag>
             
             <tag> OIDN </tag>
