@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>U2-Net：深入使用嵌套U结构进行显著目标检测</title>
+      <link href="/2024/12/03/U2-Net%EF%BC%9A%E6%B7%B1%E5%85%A5%E4%BD%BF%E7%94%A8%E5%B5%8C%E5%A5%97U%E7%BB%93%E6%9E%84%E8%BF%9B%E8%A1%8C%E6%98%BE%E8%91%97%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/"/>
+      <url>/2024/12/03/U2-Net%EF%BC%9A%E6%B7%B1%E5%85%A5%E4%BD%BF%E7%94%A8%E5%B5%8C%E5%A5%97U%E7%BB%93%E6%9E%84%E8%BF%9B%E8%A1%8C%E6%98%BE%E8%91%97%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/</url>
+      
+        <content type="html"><![CDATA[<h1 id="论文主体思路"><a href="#论文主体思路" class="headerlink" title="论文主体思路"></a>论文主体思路</h1><h2 id="论文主要贡献"><a href="#论文主要贡献" class="headerlink" title="论文主要贡献"></a>论文主要贡献</h2><ol><li>U2 -Net，用于显著目标检测（SOD）。</li><li>U2 -Net的架构是一个两层嵌套的u型结构。该设计具有以下优点：<span style="color: red;">(1)由于在我们提出的残差u块（RSU）中混合了不同大小的接受域，它能够从不同尺度捕获更多的上下文信息；(2)由于在这些残差u块中使用池化操作，它增加了整个架构的深度，而不会显著增加计算成本。这种架构使我们能够从头开始训练深度网络，而无需使用图像分类任务中的主干。</span></li><li>大多数SOD网络的设计都有一个共同的模式[18,27,41,6]，即注重充分利用现有主干提取的深度特征，如Alexnet[17]、VGG[35]、ResNet[12]、ResNeXt[44]、DenseNet[15]等。然而，<span style="color: red;">这些主干最初都是为图像分类而设计的。它们提取的特征是语义的代表，而不是局部细节和全局对比信息，这是显著性检测所必需的。</span></li><li>关于SOD的网络架构还有一些问题。首先，它们往往过于复杂。这部分是由于在现有主干中添加了额外的特征聚合模块，以从这些主干中提取多级显著性特征。其次，现有主干通常通过牺牲特征图的高分辨率来实现更深层次的体系结构。为了在可承受的内存和计算成本下运行这些深度模型，特征图在早期阶段被缩小到较低的分辨率。例如，在ResNet和DenseNet[15]的早期层，使用步幅为2的卷积，然后使用步幅为2的maxpooling，将特征映射的大小减少到四分之一。</li><li>U2 -Net是为SOD设计的两层嵌套u型结构，不使用任何来自图像分类的预训练主干。它可以从零开始训练，以获得有竞争力的表现。其次，这种新颖的架构可以在不显著增加内存和计算成本的情况下，使网络更深入，获得高分辨率。这是通过嵌套的u结构实现的：在底层，我们<span style="color: red;">设计了一种新的残差u块（RSU），它能够在不降低特征映射分辨率的情况下提取阶段内的多尺度特征；</span>在顶层，有一个类似U-Net的结构，其中每个阶段都由一个RSU块填充。两级配置导致嵌套的u结构（见图5）。我们的U2 -Net （176.3 MB）在六个公共数据集上实现了与最先进（SOTA）方法的竞争性能，并在1080Ti GPU上实时运行（30 FPS，输入大小为320×320×3）。为了便于在计算和内存受限的环境中使用我们的设计，我们提供了U2 -Net的一个小版本，称为U2 -Net (4.7 MB)。</li></ol><h1 id="各种模型大小的比较"><a href="#各种模型大小的比较" class="headerlink" title="各种模型大小的比较"></a>各种模型大小的比较</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412030940483.png"></p><ol><li>U2 -Net的模型尺寸和性能与其他最先进的SOD模型的比较。maxFβ测量在数据集ECSSD[46]上计算。红星表示我们的U2 -Net (Ours) (176.3 MB)，蓝星表示我们的小版本U2 -Net (Oursy) （4.7 MB）。</li></ol><h1 id="Residual-U-blocks"><a href="#Residual-U-blocks" class="headerlink" title="Residual U-blocks"></a>Residual U-blocks</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412031327512.png"></p><ol><li>现有卷积块和我们提出的残差u块RSU的说明：(a)普通卷积块PLN， (b)类残差块RES， (c)类稠密块DSE， (d)类初始块INC和(e)我们的残差u块RSU。</li></ol><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412031329708.png"></p><ol><li>剩余块与我们的RSU的比较。</li><li>受U-Net的启发，我们提出了一种新的残差u块RSU来捕捉阶段内的多尺度特征。RSU-L(Cin；M;Cout)如图2(e)所示，其中L为编码器层数，Cin、Cout分别为输入、输出通道，M为RSU内层通道数。因此，我们的RSU主要由三个部分组成：(i)输入卷积层，将输入特征映射x （H×W ×Cin）变换为通道为Cout的中间映射F1(x)。这是一个用于局部特征提取的普通卷积层。（ii）高度为L的类似U- net的对称编码器-解码器结构，以中间特征映射F1(x)为输入，学习提取和编码多尺度上下文信息U（F1(x)）。U表示U- net型结构，如图2(e)所示。L越大，剩余u块（RSU）越深，池化操作越多，接受域范围越大，局部和全局特征越丰富。配置此参数可以从任意空间分辨率的输入特征映射中提取多尺度特征。从逐渐下采样的特征图中提取多尺度特征，通过逐级上采样、级联和卷积编码成高分辨率特征图。这个过程减轻了大尺度直接上采样造成的精细细节损失。（iii）通过求和F1(x) +U（F1(x)）融合局部特征和多尺度特征的残差连接。</li><li>RSU与残差块在设计上的主要区别在于，RSU用类似U- net的结构代替了普通的单流卷积，并用权值层变换后的局部特征代替了原始特征：HRSU (x) &#x3D; U(F1(x))+F1(x)，其中U表示图2(e)所示的多层U结构。这种设计变化使网络能够直接从每个残差块中提取多个尺度的特征。更值得注意的是，由于u结构的计算开销很小，因为大多数操作都应用在下采样的特征映射上。</li></ol><h1 id="U2-Net的架构"><a href="#U2-Net的架构" class="headerlink" title="U2 -Net的架构"></a>U2 -Net的架构</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412031335327.png"></p><ol><li>U2 -Net架构说明。主要架构是一个类似u网的编码器-解码器，其中每个阶段由我们新提出的残差u块（RSU）组成。例如，en1基于图2(e)所示的RSU块。表1最后两行给出了各阶段RSU模块的详细配置。</li><li>我们的U2 -Net是一个两层嵌套u型结构，如图5所示。它的顶层是一个由11级组成的大u型结构（图5中的立方体），每个级都由一个配置良好的剩余u块（RSU）填充（底层u型结构）。因此，嵌套的u型结构使得阶段内多尺度特征的提取和阶段间多层次特征的聚合更加高效。</li><li>U2 -Net主要由三部分组成：(1)六级编码器，(2)五级解码器，(3)与解码器级和最后一个编码器级相连的显著性图融合模块。</li><li>(i)在编码器阶段En 1、En 2、En 3和En 4，我们分别使用RSU-7、RSU-6、RSU-5和RSU-4残差u块。如前所述，“7”、“6”、“5”和“4”表示RSU块的高度(L)。L通常根据输入特征图的空间分辨率进行配置。对于高度和宽度较大的特征图，我们使用更大的L来捕获更多的大比例尺信息。En 5和En 6中特征图的分辨率相对较低，进一步降低这些特征图的采样会导致丢失有用的上下文。因此，在en5和en6阶段，使用RSU-4F，其中“F”表示RSU是一个扩展版本，其中我们用扩展卷积替换池化和上采样操作（见图5）。这意味着RSU- 4f的所有中间特征映射与其输入特征映射具有相同的分辨率。</li><li>（ii）对于En 6，解码器级具有与其对称编码器级相似的结构。在de5中，我们还使用了扩展版剩余u块RSU-4F，这与编码器阶段En 5和En 6中使用的相似。每个解码器级都将其前一级和对称编码器级的上采样特征映射的拼接作为输入，如图5所示。</li></ol><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412031345315.png"></p><h1 id="消融实验"><a href="#消融实验" class="headerlink" title="消融实验"></a>消融实验</h1><p>为了验证U2 -Net的有效性，在以下三个方面进行了烧蚀研究：i)基本块，ii)架构和iii)主干。所有消融研究都遵循相同的实施设置。</p><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412031358985.png"></p><h1 id="图像分隔的结果"><a href="#图像分隔的结果" class="headerlink" title="图像分隔的结果"></a>图像分隔的结果</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412031404047.png"></p><h1 id="附录与补遗"><a href="#附录与补遗" class="headerlink" title="附录与补遗"></a>附录与补遗</h1><h2 id="论文中可以引用的部分"><a href="#论文中可以引用的部分" class="headerlink" title="论文中可以引用的部分"></a>论文中可以引用的部分</h2><p>无。</p><h1 id="关于文献"><a href="#关于文献" class="headerlink" title="关于文献"></a>关于文献</h1><h2 id="题目及期刊"><a href="#题目及期刊" class="headerlink" title="题目及期刊"></a>题目及期刊</h2><p>题目：U2 -Net: Going Deeper with Nested U-Structure for Salient Object Detection</p><p>U2 -Net：深入使用嵌套U结构进行显著目标检测</p><p>期刊：Pattern Recognition</p><h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><ul><li>Qin, Xuebin, et al. “U2-Net: Going Deeper with Nested U-Structure for Salient Object Detection.” Pattern Recognition 106 (2020): 107404. Print.</li></ul><h2 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h2><p>作者：Xuebin Qin，Zichen Zhang，Chenyang Huang，Masood Dehghan，Osmar R. Zaiane and Martin Jagersand</p><h2 id="发表时间"><a href="#发表时间" class="headerlink" title="发表时间"></a>发表时间</h2><p>日期：2020年</p><h2 id="阅读时间"><a href="#阅读时间" class="headerlink" title="阅读时间"></a>阅读时间</h2><p>日期：2024年12月3日</p><h2 id="开源代码及其它"><a href="#开源代码及其它" class="headerlink" title="开源代码及其它"></a>开源代码及其它</h2><p>GitHub：<a href="https://github.com/xuebinqin/U-2-Net">https://github.com/xuebinqin/U-2-Net</a> (作者)</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 文献阅读 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> U-Net </tag>
+            
+            <tag> 显著目标检测(SOD) </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>深度学习使结构照明显微镜具有低光照水平和增强的速度</title>
       <link href="/2024/11/21/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%BD%BF%E7%BB%93%E6%9E%84%E7%85%A7%E6%98%8E%E6%98%BE%E5%BE%AE%E9%95%9C%E5%85%B7%E6%9C%89%E4%BD%8E%E5%85%89%E7%85%A7%E6%B0%B4%E5%B9%B3%E5%92%8C%E5%A2%9E%E5%BC%BA%E7%9A%84%E9%80%9F%E5%BA%A6/"/>
       <url>/2024/11/21/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%BD%BF%E7%BB%93%E6%9E%84%E7%85%A7%E6%98%8E%E6%98%BE%E5%BE%AE%E9%95%9C%E5%85%B7%E6%9C%89%E4%BD%8E%E5%85%89%E7%85%A7%E6%B0%B4%E5%B9%B3%E5%92%8C%E5%A2%9E%E5%BC%BA%E7%9A%84%E9%80%9F%E5%BA%A6/</url>
@@ -95,6 +122,25 @@
             <tag> 图案照明傅立叶压印术（piFP） </tag>
             
         </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>基于卷积神经网络的深度学习生成的六边形衍射光栅用于抑制高阶衍射</title>
+      <link href="/2024/11/18/%E5%9F%BA%E4%BA%8E%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%94%9F%E6%88%90%E7%9A%84%E5%85%AD%E8%BE%B9%E5%BD%A2%E8%A1%8D%E5%B0%84%E5%85%89%E6%A0%85%E7%94%A8%E4%BA%8E%E6%8A%91%E5%88%B6%E9%AB%98%E9%98%B6%E8%A1%8D%E5%B0%84/"/>
+      <url>/2024/11/18/%E5%9F%BA%E4%BA%8E%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%94%9F%E6%88%90%E7%9A%84%E5%85%AD%E8%BE%B9%E5%BD%A2%E8%A1%8D%E5%B0%84%E5%85%89%E6%A0%85%E7%94%A8%E4%BA%8E%E6%8A%91%E5%88%B6%E9%AB%98%E9%98%B6%E8%A1%8D%E5%B0%84/</url>
+      
+        <content type="html"><![CDATA[<h1 id="论文主体思路"><a href="#论文主体思路" class="headerlink" title="论文主体思路"></a>论文主体思路</h1><h2 id="论文主要贡献"><a href="#论文主要贡献" class="headerlink" title="论文主要贡献"></a>论文主要贡献</h2><h1 id="附录与补遗"><a href="#附录与补遗" class="headerlink" title="附录与补遗"></a>附录与补遗</h1><h2 id="论文中可以引用的部分"><a href="#论文中可以引用的部分" class="headerlink" title="论文中可以引用的部分"></a>论文中可以引用的部分</h2><h1 id="关于文献"><a href="#关于文献" class="headerlink" title="关于文献"></a>关于文献</h1><h2 id="题目及期刊"><a href="#题目及期刊" class="headerlink" title="题目及期刊"></a>题目及期刊</h2><p>题目：</p><p>期刊：</p><h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p>- </p><h2 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h2><p>作者：</p><h2 id="发表时间"><a href="#发表时间" class="headerlink" title="发表时间"></a>发表时间</h2><p>日期：</p><h2 id="阅读时间"><a href="#阅读时间" class="headerlink" title="阅读时间"></a>阅读时间</h2><p>日期：2024年9月23日</p><h2 id="开源代码及其它"><a href="#开源代码及其它" class="headerlink" title="开源代码及其它"></a>开源代码及其它</h2><p>GitHub：</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 文献阅读 </category>
+          
+      </categories>
+      
       
     </entry>
     
@@ -201,6 +247,35 @@
             <tag> 波动成像(SOFI) </tag>
             
             <tag> 图像融合 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>深盲高光谱图像超分辨率</title>
+      <link href="/2024/11/11/%E6%B7%B1%E7%9B%B2%E9%AB%98%E5%85%89%E8%B0%B1%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/"/>
+      <url>/2024/11/11/%E6%B7%B1%E7%9B%B2%E9%AB%98%E5%85%89%E8%B0%B1%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/</url>
+      
+        <content type="html"><![CDATA[<h1 id="论文主体思路"><a href="#论文主体思路" class="headerlink" title="论文主体思路"></a>论文主体思路</h1><h2 id="论文主要贡献"><a href="#论文主要贡献" class="headerlink" title="论文主要贡献"></a>论文主要贡献</h2><ol><li>通过将低空间分辨率（LR）高光谱图像与高空间分辨率<span style="color: red;">多光谱图像（MSI）</span>融合，生成高空间分辨率（HR）<span style="color: red;">高光谱图像（HSI）</span>，是HSI超分辨率研究的最新进展。这些进展迹象的前提是，在空间域中从HR HSI到LR HSI的退化，以及在光谱域中从HR HSI到HR MSI的退化都是预先已知的。</li><li>通过融合低空间分辨率（LR）高光谱图像与高空间分辨率多光谱图像（MSI）生成高空间分辨率高光谱图像（HSI）的方法在最先进的高空间分辨率高光谱图像方法中占主导地位。</li><li>提出了一种新的盲HSI超分辨率无监督深度框架。</li><li>我们在潜在HR HSI之前开发了图像特异性深度图像。</li><li>我们展示了最先进的HSI超分辨率性能在应对未知退化。</li></ol><h2 id="根据输入图像的类型，现有的高光谱图像-HSI-超分辨率方法"><a href="#根据输入图像的类型，现有的高光谱图像-HSI-超分辨率方法" class="headerlink" title="根据输入图像的类型，现有的高光谱图像(HSI)超分辨率方法"></a>根据输入图像的类型，现有的高光谱图像(HSI)超分辨率方法</h2><ol><li>空间超分辨率：与传统彩色图像的超分辨率类似，这一研究方向侧重于提高输入LR HSI的空间分辨率。</li><li>光谱超分辨率：这种方法提出直接对给定MSI的光谱分辨率进行上采样以生成HSI。</li><li>基于融合的超分辨率：与前面提到的这两种方法相反，基于融合的方法的重点是通过融合LR HSI和HR MSI来生成HR HSI。</li></ol><h1 id="附录与补遗"><a href="#附录与补遗" class="headerlink" title="附录与补遗"></a>附录与补遗</h1><h2 id="缩放因子（Scaling-Factor）"><a href="#缩放因子（Scaling-Factor）" class="headerlink" title="缩放因子（Scaling Factor）"></a><strong>缩放因子</strong>（Scaling Factor）</h2><p>在图像处理和超分辨率重建（Super-Resolution, SR）任务中，<strong>缩放因子</strong>通常用来表示<strong>输入低分辨率（LR）图像和输出高分辨率（HR）图像之间的空间分辨率差异</strong>。典型的缩放因子有 2×、4×、8× 等，表示图像在横向和纵向的尺寸被放大2倍、4倍或8倍。</p><ul><li><p><strong>解释</strong>：</p><ul><li><strong>缩放因子 &#x3D; 2</strong>：假设原始低分辨率图像的大小为 100 × 100 像素，经过放大后，高分辨率图像的大小为 200 × 200 像素。</li><li><strong>缩放因子 &#x3D; 4</strong>：如果低分辨率图像为 100 × 100 像素，则高分辨率图像为 400 × 400 像素。</li></ul></li><li><p><strong>公式</strong>：</p><p>HR 图像尺寸&#x3D;LR 图像尺寸×缩放因子\text{HR 图像尺寸} &#x3D; \text{LR 图像尺寸} \times \text{缩放因子}HR 图像尺寸&#x3D;LR 图像尺寸×缩放因子</p></li></ul><h2 id="论文中可以引用的部分"><a href="#论文中可以引用的部分" class="headerlink" title="论文中可以引用的部分"></a>论文中可以引用的部分</h2><h1 id="关于文献"><a href="#关于文献" class="headerlink" title="关于文献"></a>关于文献</h1><h2 id="题目及期刊"><a href="#题目及期刊" class="headerlink" title="题目及期刊"></a>题目及期刊</h2><p>题目：Deep Blind Hyperspectral Image Super-Resolution</p><p>深盲高光谱图像超分辨率</p><p>期刊：IEEE TRANSACTIONS ON NEURAL NETWORKS AND LEARNING SYSTEMS</p><h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><ul><li>Zhang, L., et al. “Deep Blind Hyperspectral Image Super-Resolution.” IEEE Trans Neural Netw Learn Syst 32.6 (2021): 2388-400. Print.</li></ul><h2 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h2><p>作者：Lei Zhang，Jiangtao Nie，Wei Wei，Yong Li，and Yanning Zhang </p><h2 id="发表时间"><a href="#发表时间" class="headerlink" title="发表时间"></a>发表时间</h2><p>日期：2021年</p><h2 id="阅读时间"><a href="#阅读时间" class="headerlink" title="阅读时间"></a>阅读时间</h2><p>日期：2024年11月11日</p><h2 id="开源代码及其它"><a href="#开源代码及其它" class="headerlink" title="开源代码及其它"></a>开源代码及其它</h2><p>GitHub：无</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 文献阅读 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 深度学习 </tag>
+            
+            <tag> 无监督学习 </tag>
+            
+            <tag> 光谱重建 </tag>
             
         </tags>
       
@@ -862,6 +937,31 @@
         <tags>
             
             <tag> 超透镜 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>深度学习笔记</title>
+      <link href="/2024/08/09/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+      <url>/2024/08/09/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      <categories>
+          
+          <category> 笔记 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 深度学习 </tag>
             
         </tags>
       
