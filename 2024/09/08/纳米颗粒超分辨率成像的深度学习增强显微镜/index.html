@@ -1,0 +1,283 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>纳米颗粒超分辨率成像的深度学习增强显微镜 | YuJiang's Long Holiday</title><meta name="author" content="YuJiang's Long Holiday"><meta name="copyright" content="YuJiang's Long Holiday"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="设计了深度非局部U-Net网络来建立光学衍射图像与粒子尺寸之间的非线性投影。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="纳米颗粒超分辨率成像的深度学习增强显微镜">
+<meta property="og:url" content="https://yujiang-longholiday.github.io/2024/09/08/%E7%BA%B3%E7%B1%B3%E9%A2%97%E7%B2%92%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F%E7%9A%84%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%A2%9E%E5%BC%BA%E6%98%BE%E5%BE%AE%E9%95%9C/index.html">
+<meta property="og:site_name" content="YuJiang&#39;s Long Holiday">
+<meta property="og:description" content="设计了深度非局部U-Net网络来建立光学衍射图像与粒子尺寸之间的非线性投影。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201421046.jpg">
+<meta property="article:published_time" content="2024-09-08T12:45:20.000Z">
+<meta property="article:modified_time" content="2024-09-20T06:37:31.584Z">
+<meta property="article:author" content="YuJiang&#39;s Long Holiday">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="U-Net">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201421046.jpg"><link rel="shortcut icon" href="/./image/ghosts.png"><link rel="canonical" href="https://yujiang-longholiday.github.io/2024/09/08/%E7%BA%B3%E7%B1%B3%E9%A2%97%E7%B2%92%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F%E7%9A%84%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%A2%9E%E5%BC%BA%E6%98%BE%E5%BE%AE%E9%95%9C/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '纳米颗粒超分辨率成像的深度学习增强显微镜',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: true,
+  isToc: true,
+  postUpdate: '2024-09-20 14:37:31'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/font.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./image/touxiang.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">44</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> Link</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Blogroll</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About Me</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201421046.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="YuJiang's Long Holiday"><span class="site-name">YuJiang's Long Holiday</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> Link</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Blogroll</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About Me</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">纳米颗粒超分辨率成像的深度学习增强显微镜</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-09-08T12:45:20.000Z" title="发表于 2024-09-08 20:45:20">2024-09-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-09-20T06:37:31.584Z" title="更新于 2024-09-20 14:37:31">2024-09-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB/">文献阅读</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="纳米颗粒超分辨率成像的深度学习增强显微镜"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="论文主体思路"><a href="#论文主体思路" class="headerlink" title="论文主体思路"></a>论文主体思路</h1><h2 id="论文主要贡献"><a href="#论文主要贡献" class="headerlink" title="论文主要贡献"></a>论文主要贡献</h2><ol>
+<li>应用深度学习框架来提高具有规则形状但排列不同的金属纳米结构的光学成像的空间分辨率。</li>
+<li>以随机分布的金纳米粒子的光学图像作为输入，相应的扫描电镜图像作为真值，构建卷积神经网络(CNN)并对其进行预训练。</li>
+<li>提出了一种深度非局部U-net，它将非局部去噪模块融入到众所周知的U-net体系结构中。这种集成使我们的网络能够隐式地将跨多个尺度的自相似先验与U-net结构结合起来，并通过非局部去噪模块显式地揭示跨单个尺度的非局部自相似。我们提出的网络对于将衍射受限的光学图像转换为类似SEM的超分辨率图像的特定任务特别有效。</li>
+</ol>
+<h2 id="图像采集原理图"><a href="#图像采集原理图" class="headerlink" title="图像采集原理图"></a>图像采集原理图</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201426792.png"></p>
+<ol>
+<li>以金纳米粒子(AuNPs)为例，展示了用于光学图像超分辨率重建的深度学习反卷积模型。通过安装在暗视场光学显微镜上的科学相机收集AuNPs的光学显微照片，如图1(a)所示。从AuNP的衍射图(图1(b))可以看出，如果粒子间距离低于瑞利准则(∆&#x3D; 0.61λ&#x2F;NA)，则无法区分紧密分布的AuNP二聚体。然而，这些衍射模式的强度分布仍然存在许多差异，为纳米颗粒排列的反向恢复提供了很多信息。</li>
+</ol>
+<h2 id="深层卷积神经网络的架构设计"><a href="#深层卷积神经网络的架构设计" class="headerlink" title="深层卷积神经网络的架构设计"></a>深层卷积神经网络的架构设计</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201427495.png"></p>
+<ol>
+<li>设计了一个CNN来建立光学衍射图像与粒子尺寸之间的非线性投影。</li>
+<li>所提出的网络架构结合了由非局部去噪模块构成的显式非局部先验和由U-net结构构成的隐式非局部先验，如图2(a)所示，U-net建立在四尺度编解码U-net上，每个尺度都有一个跳过连接。在第三个尺度中，我们为编码器和解码器插入非局部去噪模块。</li>
+</ol>
+<h2 id="数据集的分配"><a href="#数据集的分配" class="headerlink" title="数据集的分配"></a>数据集的分配</h2><ol>
+<li>将光学和扫描电镜图像裁剪成480对400 × 400像素的不重叠子图，其中360对用于训练，其余用于测试。</li>
+</ol>
+<h2 id="纳米粒子多聚体和纳米线的超分辨率"><a href="#纳米粒子多聚体和纳米线的超分辨率" class="headerlink" title="纳米粒子多聚体和纳米线的超分辨率"></a>纳米粒子多聚体和纳米线的超分辨率</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201427277.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201427747.png" alt="image-20240908213629560"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201428630.png"></p>
+<h2 id="网络训练时的损失曲线"><a href="#网络训练时的损失曲线" class="headerlink" title="网络训练时的损失曲线"></a>网络训练时的损失曲线</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201428387.png"></p>
+<ol>
+<li>所提出的CNN算法的通用性需要进一步验证用于其他类型的纳米结构。为此，我们还利用深度学习模型从模糊的光学图像中重建随机交联银纳米线的形态(图7)。银纳米线的直径为~ 100 nm，长度为~ 10 μ m。</li>
+<li>如图7(a)所示，银纳米线随机分布在衬底表面。纳米线网表现出许多相互作用，这些相互作用不可避免地影响了所得到的光学衍射图。</li>
+<li>很明显，复杂的纳米线网的大部分部分都被准确地恢复了。然而，在纳米线网相交区域附近，微小的差异是明显的。此外，在某些密集的区域内，较细的纳米线容易产生误判，导致输出纳米线产生微小的波纹。为了更清楚地说明这些挑战，我们提供了两个特定局部区域的放大图片，如图7(d)和7(e)所示。</li>
+<li>此外，我们给出了在网络训练过程中观察到的损失曲线，表明损失随着epoch的增加逐渐减小并收敛(图7(f))。</li>
+<li>需要注意的是，在这项工作中设计CNN算法的动机是为了提高光学显微镜对常见的规则形状的人工纳米结构(如圆盘、球体和线等)的分辨率，因为这些几何形状经常用于在纳米材料、纳米光子学、纳米电子学甚至纳米力学领域构建更复杂的纳米图案。</li>
+</ol>
+<h1 id="附录与补遗"><a href="#附录与补遗" class="headerlink" title="附录与补遗"></a>附录与补遗</h1><h2 id="论文中可以引用的部分"><a href="#论文中可以引用的部分" class="headerlink" title="论文中可以引用的部分"></a>论文中可以引用的部分</h2><ol>
+<li>过去几十年中，光学超分辨率显微镜的研究主要集中于突破衍射极限，尤其是远场荧光显微镜（如PALM、STORM、STED、SIM）在生物成像中取得了几纳米的分辨率。然而，这些方法依赖荧光标记，限制了其在无机样品中的应用。当前的挑战是为人工纳米结构等无机样品开发一种简单、非侵入式的超分辨率成像技术。</li>
+<li>传统远场光学成像受到阿贝衍射极限的限制，这主要是由于样品表面的指数衰减倏逝波所携带的图像信息的损失。一些光学“硬件”创新，如能够收集全波信息的超级透镜，有望打破分辨率的限制。然而，目前这些超材料光学元件距离实际应用还有很长的路要走，许多技术难题尚未解决，如准近场工作距离等。</li>
+<li>计算方法在光学显微照片的超分辨率重建中也发挥了重要作用。例如，荧光图像的光学模糊可以通过样品散射场与非相干成像系统的点扩展函数的卷积来表述。应用适当的反卷积算法，可以从物体的模糊图像中反向恢复物体的精细结构。对于相干成像系统，基于傅里叶光学和信息理论，已经提出了许多反卷积算法，如带宽外推和压缩感知，用于亚波长结构的超分辨率认知。</li>
+<li>用于逆图像恢复的网络必须使用广泛的已知数据进行预训练。因此，数据驱动模型缺乏通用性。此外，深度学习网络的“黑箱”性质引发了人们对网络可以得出的基础物理完整性的担忧。因此，更多的研究旨在将物理约束纳入深度神经架构，以减少对大量训练数据集的依赖。</li>
+<li>除了网络训练的数据采集问题外，设计良好的CNN对于将计算图像解卷积为高分辨率图像也起着至关重要的作用。直接应用常见的完整CNN架构可能会遇到通用性问题，即训练好的CNN模型严重依赖数据并且缺乏模型可解释性。解决这个问题的一种方法是在CNN设计过程中考虑专家领域知识。这种基于知识的CNN在使用稀疏训练数据的同时，期望具有更高的通用性，以已知的物理先验作为约束训练的手段。在各种领域知识中，非局部自相似是大多数图像恢复任务的通用先验，因此得到了广泛的研究。最近，有研究指出，具有跳过连接的U-net架构自然地在多个尺度上施加自相似性。另一方面，为了利用这种跨空间域的非局部自相似的固有特性，提出了非局部去噪模块，该模块可以融合到现有的CNN中进行端到端训练。</li>
+</ol>
+<h1 id="关于文献"><a href="#关于文献" class="headerlink" title="关于文献"></a>关于文献</h1><h2 id="题目及期刊"><a href="#题目及期刊" class="headerlink" title="题目及期刊"></a>题目及期刊</h2><p>题目：Deep-learning-augmented microscopy for super-resolution imaging of nanoparticles</p>
+<p>纳米颗粒超分辨率成像的深度学习增强显微镜</p>
+<p>期刊：Optics Express</p>
+<h2 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h2><p>作者：XIN HU，XIXI JIA</p>
+<h2 id="发表时间"><a href="#发表时间" class="headerlink" title="发表时间"></a>发表时间</h2><p>日期：2023年</p>
+<h2 id="阅读时间"><a href="#阅读时间" class="headerlink" title="阅读时间"></a>阅读时间</h2><p>日期：2024年9月8日</p>
+<h2 id="开源代码及其它"><a href="#开源代码及其它" class="headerlink" title="开源代码及其它"></a>开源代码及其它</h2><p>GitHub：无</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://YuJiang-LongHoliday.github.io">YuJiang's Long Holiday</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://yujiang-longholiday.github.io/2024/09/08/%E7%BA%B3%E7%B1%B3%E9%A2%97%E7%B2%92%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F%E7%9A%84%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%A2%9E%E5%BC%BA%E6%98%BE%E5%BE%AE%E9%95%9C/">https://yujiang-longholiday.github.io/2024/09/08/%E7%BA%B3%E7%B1%B3%E9%A2%97%E7%B2%92%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F%E7%9A%84%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%A2%9E%E5%BC%BA%E6%98%BE%E5%BE%AE%E9%95%9C/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://YuJiang-LongHoliday.github.io" target="_blank">YuJiang's Long Holiday</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="post-meta__tags" href="/tags/U-Net/">U-Net</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201421046.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/09/19/%E5%85%89%E5%AD%A6%E8%BF%9C%E5%9C%BA%E8%B6%85%E9%80%8F%E9%95%9C%E8%B6%85%E8%B6%8A%E8%A1%8D%E5%B0%84%E6%9E%81%E9%99%90%E6%88%90%E5%83%8F%E7%9A%84%E4%BC%A0%E8%BE%93%E7%89%B9%E6%80%A7%E7%90%86%E8%AE%BA/" title="光学远场超透镜超越衍射极限成像的传输特性理论"><img class="cover" src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201438793.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">光学远场超透镜超越衍射极限成像的传输特性理论</div></div></a></div><div class="next-post pull-right"><a href="/2024/09/05/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%BB%93%E6%9E%84%E7%85%A7%E6%98%8E%E6%98%BE%E5%BE%AE%E9%95%9C%E7%9A%84%E8%87%AA%E7%9B%91%E7%9D%A3%E5%8E%BB%E5%99%AA%E4%BD%BF%E9%95%BF%E6%9C%9F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%B4%BB%E7%BB%86%E8%83%9E%E6%88%90%E5%83%8F%E6%88%90%E4%B8%BA%E5%8F%AF%E8%83%BD/" title="多模态结构照明显微镜的自监督去噪使长期超分辨率活细胞成像成为可能"><img class="cover" src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409051556151.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">多模态结构照明显微镜的自监督去噪使长期超分辨率活细胞成像成为可能</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="toc-number">1.</span> <span class="toc-text">论文主体思路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%BB%E8%A6%81%E8%B4%A1%E7%8C%AE"><span class="toc-number">1.1.</span> <span class="toc-text">论文主要贡献</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E9%87%87%E9%9B%86%E5%8E%9F%E7%90%86%E5%9B%BE"><span class="toc-number">1.2.</span> <span class="toc-text">图像采集原理图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%B1%E5%B1%82%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.3.</span> <span class="toc-text">深层卷积神经网络的架构设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E7%9A%84%E5%88%86%E9%85%8D"><span class="toc-number">1.4.</span> <span class="toc-text">数据集的分配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%B3%E7%B1%B3%E7%B2%92%E5%AD%90%E5%A4%9A%E8%81%9A%E4%BD%93%E5%92%8C%E7%BA%B3%E7%B1%B3%E7%BA%BF%E7%9A%84%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87"><span class="toc-number">1.5.</span> <span class="toc-text">纳米粒子多聚体和纳米线的超分辨率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E8%AE%AD%E7%BB%83%E6%97%B6%E7%9A%84%E6%8D%9F%E5%A4%B1%E6%9B%B2%E7%BA%BF"><span class="toc-number">1.6.</span> <span class="toc-text">网络训练时的损失曲线</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%99%84%E5%BD%95%E4%B8%8E%E8%A1%A5%E9%81%97"><span class="toc-number">2.</span> <span class="toc-text">附录与补遗</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%AD%E5%8F%AF%E4%BB%A5%E5%BC%95%E7%94%A8%E7%9A%84%E9%83%A8%E5%88%86"><span class="toc-number">2.1.</span> <span class="toc-text">论文中可以引用的部分</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E6%96%87%E7%8C%AE"><span class="toc-number">3.</span> <span class="toc-text">关于文献</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%8F%8A%E6%9C%9F%E5%88%8A"><span class="toc-number">3.1.</span> <span class="toc-text">题目及期刊</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E8%80%85%E4%BF%A1%E6%81%AF"><span class="toc-number">3.2.</span> <span class="toc-text">作者信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E8%A1%A8%E6%97%B6%E9%97%B4"><span class="toc-number">3.3.</span> <span class="toc-text">发表时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%85%E8%AF%BB%E6%97%B6%E9%97%B4"><span class="toc-number">3.4.</span> <span class="toc-text">阅读时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E4%BB%A3%E7%A0%81%E5%8F%8A%E5%85%B6%E5%AE%83"><span class="toc-number">3.5.</span> <span class="toc-text">开源代码及其它</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By YuJiang's Long Holiday</div><div class="footer_custom_text">Hi, welcome to my <a target="_blank" rel="noopener" href="https://butterfly.js.org/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

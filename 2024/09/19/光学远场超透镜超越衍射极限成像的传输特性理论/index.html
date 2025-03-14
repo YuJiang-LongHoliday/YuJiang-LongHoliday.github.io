@@ -1,0 +1,281 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>光学远场超透镜超越衍射极限成像的传输特性理论 | YuJiang's Long Holiday</title><meta name="author" content="YuJiang's Long Holiday"><meta name="copyright" content="YuJiang's Long Holiday"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="利用设计的超透镜(FSL)实现超分辨率图像的重建。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="光学远场超透镜超越衍射极限成像的传输特性理论">
+<meta property="og:url" content="https://yujiang-longholiday.github.io/2024/09/19/%E5%85%89%E5%AD%A6%E8%BF%9C%E5%9C%BA%E8%B6%85%E9%80%8F%E9%95%9C%E8%B6%85%E8%B6%8A%E8%A1%8D%E5%B0%84%E6%9E%81%E9%99%90%E6%88%90%E5%83%8F%E7%9A%84%E4%BC%A0%E8%BE%93%E7%89%B9%E6%80%A7%E7%90%86%E8%AE%BA/index.html">
+<meta property="og:site_name" content="YuJiang&#39;s Long Holiday">
+<meta property="og:description" content="利用设计的超透镜(FSL)实现超分辨率图像的重建。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201438793.jpg">
+<meta property="article:published_time" content="2024-09-19T01:41:42.000Z">
+<meta property="article:modified_time" content="2024-09-20T06:39:48.193Z">
+<meta property="article:author" content="YuJiang&#39;s Long Holiday">
+<meta property="article:tag" content="超透镜">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201438793.jpg"><link rel="shortcut icon" href="/./image/ghosts.png"><link rel="canonical" href="https://yujiang-longholiday.github.io/2024/09/19/%E5%85%89%E5%AD%A6%E8%BF%9C%E5%9C%BA%E8%B6%85%E9%80%8F%E9%95%9C%E8%B6%85%E8%B6%8A%E8%A1%8D%E5%B0%84%E6%9E%81%E9%99%90%E6%88%90%E5%83%8F%E7%9A%84%E4%BC%A0%E8%BE%93%E7%89%B9%E6%80%A7%E7%90%86%E8%AE%BA/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '光学远场超透镜超越衍射极限成像的传输特性理论',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: true,
+  isToc: true,
+  postUpdate: '2024-09-20 14:39:48'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/font.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./image/touxiang.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">44</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> Link</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Blogroll</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About Me</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201438793.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="YuJiang's Long Holiday"><span class="site-name">YuJiang's Long Holiday</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> Link</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Blogroll</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About Me</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">光学远场超透镜超越衍射极限成像的传输特性理论</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-09-19T01:41:42.000Z" title="发表于 2024-09-19 09:41:42">2024-09-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-09-20T06:39:48.193Z" title="更新于 2024-09-20 14:39:48">2024-09-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB/">文献阅读</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="光学远场超透镜超越衍射极限成像的传输特性理论"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="论文主体思路"><a href="#论文主体思路" class="headerlink" title="论文主体思路"></a>论文主体思路</h1><h2 id="论文主要贡献"><a href="#论文主要贡献" class="headerlink" title="论文主要贡献"></a>论文主要贡献</h2><ol>
+<li>超衍射极限成像的传统光学超透镜仅在超透镜的近场区产生图像。相比之下，光学远场超透镜(FSL)器件具有显著的传输特性，导致远场和近场角光谱之间的一对一关系。</li>
+<li>这种特殊的FSL是由一个合理设计的周期性波纹金属板基超透镜组成的。通过在物体的近场使用FSL，并通过测量远场散射的角光谱(例如，使用衍射显微镜)，可以以低于衍射极限的超高分辨率重建物体的图像。</li>
+</ol>
+<h2 id="远场超透镜成像理论"><a href="#远场超透镜成像理论" class="headerlink" title="远场超透镜成像理论"></a>远场超透镜成像理论</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201439095.png"></p>
+<ul>
+<li>(a)传统超透镜与(b)超透镜的透射特性。假设波是由z &#x3D; z0的物体辐射的。入射倏逝波通过传统的超透镜(a)传输时得到增强，并且在近场区域仍然迅速消失，这限制了超透镜对近场的成像能力。相比之下，FSL (b)对传播波中的原始倏逝波进行了增强和转换。在后一种情况下，入射传播波在远场以较低的振幅传播，对远场角谱的主要贡献是入射倏逝波。利用这一特性，可以从远场角谱测量中得到近场角谱。</li>
+<li>如图1(a)所示，倏逝波在传输过程中得到增强，但仍局限于近场，这意味着它们的振幅在超透镜的法线方向上呈指数衰减，这使得远场的亚波长成像不可能。相比之下，FSL不仅大大增强了倏逝波，而且在传输中将其转换为传播波，如图1(b)所示。FSL是基于一个合理设计的周期性波纹超透镜。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201439205.png"></p>
+<ul>
+<li>选择一个亚波长周期，使得入射传播波仅通过0阶传输到远场，而具有正(负)横波数的入射倏逝波仅通过−1阶(阶+1)传输到远场。该结构的设计使得入射倏逝波通过利用超透镜效应得到增强，并通过高效的- 1阶衍射过程转化为传播波。相比之下，入射传播波以较小的振幅在0阶上传播。</li>
+<li>因此，虽然物体辐射的近场角光谱包含传播波和倏逝波，但通过超透镜光栅传输到远场的波的主要贡献来自入射倏逝波。透射和入射横波数之间也存在一对一的关系。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201439065.png"></p>
+<h2 id="光学远场超透镜装置的设计"><a href="#光学远场超透镜装置的设计" class="headerlink" title="光学远场超透镜装置的设计"></a>光学远场超透镜装置的设计</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201439700.png"></p>
+<h1 id="附录与补遗"><a href="#附录与补遗" class="headerlink" title="附录与补遗"></a>附录与补遗</h1><h2 id="传播波与倏逝波"><a href="#传播波与倏逝波" class="headerlink" title="传播波与倏逝波"></a>传播波与倏逝波</h2><ul>
+<li>衍射极限以下分辨率成像的关键在于对物体近场辐射的传播波和倏逝波的采集和检测自由空间中折射率为n的单色平流层波U。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201439939.png"></p>
+<h2 id="表面等离子体激元-SPP"><a href="#表面等离子体激元-SPP" class="headerlink" title="表面等离子体激元(SPP)"></a>表面等离子体激元(SPP)</h2><ol>
+<li>表面等离子体激元(SPP)在贵金属光学超透镜两个界面的激发对倏逝波的增强起着关键作用。</li>
+<li>表面等离子体激元（SPP）是一种由光与金属表面自由电子相互作用产生的电磁波，沿着金属-介质界面传播。SPP 在贵金属光学超透镜的两个界面处的激发，能够极大地增强倏逝波（evanescent wave）的强度，从而提升光的空间分辨率。这种增强效应是因为 SPP 可以将光场限制在亚波长尺度，并使光能够穿透传统衍射极限。</li>
+<li>在超透镜中，倏逝波携带着物体细节信息，但通常会迅速衰减，无法直接检测。通过在贵金属界面激发 SPP，可以有效地增强这些倏逝波的能量，使其传播距离更长，并被超透镜捕捉和利用。这一现象对于实现光学超分辨率成像和纳米尺度光学应用具有重要意义。</li>
+<li>贵金属如金和银，因其优越的导电性和对电磁波的响应特性，常被用作激发 SPP 的材料。它们能够在可见光或近红外范围内高效地支持 SPP 的传播和增强。</li>
+</ol>
+<h2 id="横向分辨率与纵向分辨率"><a href="#横向分辨率与纵向分辨率" class="headerlink" title="横向分辨率与纵向分辨率"></a>横向分辨率与纵向分辨率</h2><ol>
+<li>横向分辨率是指成像系统在水平方向或垂直方向上能分辨的最小距离，也就是两个物体或物体细节在图像中能够被区分开的最小间距。它是用来衡量图像清晰度和细节精度的重要指标，通常以距离单位（如微米）表示。</li>
+<li>纵向分辨率（也称为轴向分辨率）是光学或成像系统中沿光轴方向（深度方向）能够分辨的最小距离。与横向分辨率不同，纵向分辨率描述的是系统在深度方向上区分两个相邻物体层的能力。在实际应用中，纵向分辨率对于三维成像（如共聚焦显微镜和光学相干断层扫描等）至关重要，因为它决定了系统在深度方向上能够清晰区分物体不同层次的能力。</li>
+</ol>
+<h2 id="论文中可以引用的部分"><a href="#论文中可以引用的部分" class="headerlink" title="论文中可以引用的部分"></a>论文中可以引用的部分</h2><ol>
+<li>传播波与倏逝波部分。</li>
+<li>远场超透镜成像理论。</li>
+</ol>
+<h1 id="关于文献"><a href="#关于文献" class="headerlink" title="关于文献"></a>关于文献</h1><h2 id="题目及期刊"><a href="#题目及期刊" class="headerlink" title="题目及期刊"></a>题目及期刊</h2><p>题目：Theory of the transmission properties of an optical far-field superlens for imaging beyond the diffraction limit</p>
+<p>光学远场超透镜超越衍射极限成像的传输特性理论</p>
+<p>期刊：Optica Publishing Group(OPG)</p>
+<h2 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h2><p>作者：Stéphane Durant, Zhaowei Liu</p>
+<h2 id="发表时间"><a href="#发表时间" class="headerlink" title="发表时间"></a>发表时间</h2><p>日期：2006年</p>
+<h2 id="阅读时间"><a href="#阅读时间" class="headerlink" title="阅读时间"></a>阅读时间</h2><p>日期：2024年9月19日</p>
+<h2 id="开源代码及其它"><a href="#开源代码及其它" class="headerlink" title="开源代码及其它"></a>开源代码及其它</h2><p>GitHub：无</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://YuJiang-LongHoliday.github.io">YuJiang's Long Holiday</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://yujiang-longholiday.github.io/2024/09/19/%E5%85%89%E5%AD%A6%E8%BF%9C%E5%9C%BA%E8%B6%85%E9%80%8F%E9%95%9C%E8%B6%85%E8%B6%8A%E8%A1%8D%E5%B0%84%E6%9E%81%E9%99%90%E6%88%90%E5%83%8F%E7%9A%84%E4%BC%A0%E8%BE%93%E7%89%B9%E6%80%A7%E7%90%86%E8%AE%BA/">https://yujiang-longholiday.github.io/2024/09/19/%E5%85%89%E5%AD%A6%E8%BF%9C%E5%9C%BA%E8%B6%85%E9%80%8F%E9%95%9C%E8%B6%85%E8%B6%8A%E8%A1%8D%E5%B0%84%E6%9E%81%E9%99%90%E6%88%90%E5%83%8F%E7%9A%84%E4%BC%A0%E8%BE%93%E7%89%B9%E6%80%A7%E7%90%86%E8%AE%BA/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://YuJiang-LongHoliday.github.io" target="_blank">YuJiang's Long Holiday</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%B6%85%E9%80%8F%E9%95%9C/">超透镜</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201438793.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/09/20/%E9%94%AF%E9%BD%BF%E7%9B%B8%E4%BD%8D%E8%A1%8D%E5%B0%84%E5%85%89%E6%A0%85%E5%85%89%E5%AD%90%E5%B0%84%E6%B5%81%E9%98%B5%E5%88%97%E7%9A%84%E9%A6%96%E6%AC%A1%E5%AE%9E%E9%AA%8C%E8%A7%82%E5%AF%9F/" title="锯齿相位衍射光栅光子射流阵列的首次实验观察"><img class="cover" src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201947988.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">锯齿相位衍射光栅光子射流阵列的首次实验观察</div></div></a></div><div class="next-post pull-right"><a href="/2024/09/08/%E7%BA%B3%E7%B1%B3%E9%A2%97%E7%B2%92%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F%E7%9A%84%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%A2%9E%E5%BC%BA%E6%98%BE%E5%BE%AE%E9%95%9C/" title="纳米颗粒超分辨率成像的深度学习增强显微镜"><img class="cover" src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202409201421046.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">纳米颗粒超分辨率成像的深度学习增强显微镜</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="toc-number">1.</span> <span class="toc-text">论文主体思路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%BB%E8%A6%81%E8%B4%A1%E7%8C%AE"><span class="toc-number">1.1.</span> <span class="toc-text">论文主要贡献</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9C%E5%9C%BA%E8%B6%85%E9%80%8F%E9%95%9C%E6%88%90%E5%83%8F%E7%90%86%E8%AE%BA"><span class="toc-number">1.2.</span> <span class="toc-text">远场超透镜成像理论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%89%E5%AD%A6%E8%BF%9C%E5%9C%BA%E8%B6%85%E9%80%8F%E9%95%9C%E8%A3%85%E7%BD%AE%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.3.</span> <span class="toc-text">光学远场超透镜装置的设计</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%99%84%E5%BD%95%E4%B8%8E%E8%A1%A5%E9%81%97"><span class="toc-number">2.</span> <span class="toc-text">附录与补遗</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%A0%E6%92%AD%E6%B3%A2%E4%B8%8E%E5%80%8F%E9%80%9D%E6%B3%A2"><span class="toc-number">2.1.</span> <span class="toc-text">传播波与倏逝波</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A8%E9%9D%A2%E7%AD%89%E7%A6%BB%E5%AD%90%E4%BD%93%E6%BF%80%E5%85%83-SPP"><span class="toc-number">2.2.</span> <span class="toc-text">表面等离子体激元(SPP)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%AA%E5%90%91%E5%88%86%E8%BE%A8%E7%8E%87%E4%B8%8E%E7%BA%B5%E5%90%91%E5%88%86%E8%BE%A8%E7%8E%87"><span class="toc-number">2.3.</span> <span class="toc-text">横向分辨率与纵向分辨率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%AD%E5%8F%AF%E4%BB%A5%E5%BC%95%E7%94%A8%E7%9A%84%E9%83%A8%E5%88%86"><span class="toc-number">2.4.</span> <span class="toc-text">论文中可以引用的部分</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E6%96%87%E7%8C%AE"><span class="toc-number">3.</span> <span class="toc-text">关于文献</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%8F%8A%E6%9C%9F%E5%88%8A"><span class="toc-number">3.1.</span> <span class="toc-text">题目及期刊</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E8%80%85%E4%BF%A1%E6%81%AF"><span class="toc-number">3.2.</span> <span class="toc-text">作者信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E8%A1%A8%E6%97%B6%E9%97%B4"><span class="toc-number">3.3.</span> <span class="toc-text">发表时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%85%E8%AF%BB%E6%97%B6%E9%97%B4"><span class="toc-number">3.4.</span> <span class="toc-text">阅读时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E4%BB%A3%E7%A0%81%E5%8F%8A%E5%85%B6%E5%AE%83"><span class="toc-number">3.5.</span> <span class="toc-text">开源代码及其它</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By YuJiang's Long Holiday</div><div class="footer_custom_text">Hi, welcome to my <a target="_blank" rel="noopener" href="https://butterfly.js.org/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

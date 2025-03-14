@@ -1,0 +1,316 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>深度学习辅助等离子体暗场显微镜超分辨率无标记成像 | YuJiang's Long Holiday</title><meta name="author" content="YuJiang's Long Holiday"><meta name="copyright" content="YuJiang's Long Holiday"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="论文主体思路论文主要贡献 制作了一个设计的PDF衬底，表面等离子激元（SPPs）照亮衬底上的样品。基于所设计的衬底和检测光学元件的参数，通过预训练的卷积神经网络（CNN）对样品散射光形成的暗场图像进行进一步处理。我们演示了在各种无标签对象上的分辨率提高了2.8倍。 在离子体暗场显微镜（DAPD）中，设计的等离子体衬底用于产生具有大波矢量的SPPs作为暗场照明。样品在衬底上散射的SPPs成为远场可检">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习辅助等离子体暗场显微镜超分辨率无标记成像">
+<meta property="og:url" content="https://yujiang-longholiday.github.io/2024/12/13/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%BE%85%E5%8A%A9%E7%AD%89%E7%A6%BB%E5%AD%90%E4%BD%93%E6%9A%97%E5%9C%BA%E6%98%BE%E5%BE%AE%E9%95%9C%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%97%A0%E6%A0%87%E8%AE%B0%E6%88%90%E5%83%8F/index.html">
+<meta property="og:site_name" content="YuJiang&#39;s Long Holiday">
+<meta property="og:description" content="论文主体思路论文主要贡献 制作了一个设计的PDF衬底，表面等离子激元（SPPs）照亮衬底上的样品。基于所设计的衬底和检测光学元件的参数，通过预训练的卷积神经网络（CNN）对样品散射光形成的暗场图像进行进一步处理。我们演示了在各种无标签对象上的分辨率提高了2.8倍。 在离子体暗场显微镜（DAPD）中，设计的等离子体衬底用于产生具有大波矢量的SPPs作为暗场照明。样品在衬底上散射的SPPs成为远场可检">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202501041851932.jpg">
+<meta property="article:published_time" content="2024-12-13T01:31:42.000Z">
+<meta property="article:modified_time" content="2025-01-04T10:52:43.198Z">
+<meta property="article:author" content="YuJiang&#39;s Long Holiday">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="U-Net">
+<meta property="article:tag" content="傅里叶">
+<meta property="article:tag" content="衬底">
+<meta property="article:tag" content="暗场显微镜">
+<meta property="article:tag" content="傅里叶环相关(FRC)">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202501041851932.jpg"><link rel="shortcut icon" href="/./image/ghosts.png"><link rel="canonical" href="https://yujiang-longholiday.github.io/2024/12/13/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%BE%85%E5%8A%A9%E7%AD%89%E7%A6%BB%E5%AD%90%E4%BD%93%E6%9A%97%E5%9C%BA%E6%98%BE%E5%BE%AE%E9%95%9C%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%97%A0%E6%A0%87%E8%AE%B0%E6%88%90%E5%83%8F/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '深度学习辅助等离子体暗场显微镜超分辨率无标记成像',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: true,
+  isToc: true,
+  postUpdate: '2025-01-04 18:52:43'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/font.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./image/touxiang.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">44</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> Link</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Blogroll</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About Me</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202501041851932.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="YuJiang's Long Holiday"><span class="site-name">YuJiang's Long Holiday</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> Link</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Blogroll</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About Me</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">深度学习辅助等离子体暗场显微镜超分辨率无标记成像</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-12-13T01:31:42.000Z" title="发表于 2024-12-13 09:31:42">2024-12-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-01-04T10:52:43.198Z" title="更新于 2025-01-04 18:52:43">2025-01-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB/">文献阅读</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>12分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="深度学习辅助等离子体暗场显微镜超分辨率无标记成像"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="论文主体思路"><a href="#论文主体思路" class="headerlink" title="论文主体思路"></a>论文主体思路</h1><h2 id="论文主要贡献"><a href="#论文主要贡献" class="headerlink" title="论文主要贡献"></a>论文主要贡献</h2><ol>
+<li>制作了一个设计的PDF衬底，<span style="color: red;">表面等离子激元（SPPs）</span>照亮衬底上的样品。基于所设计的衬底和检测光学元件的参数，通过预训练的卷积神经网络（CNN）对样品散射光形成的暗场图像进行进一步处理。我们演示了在各种无标签对象上的分辨率提高了2.8倍。</li>
+<li>在<span style="color: red;">离子体暗场显微镜（DAPD）</span>中，设计的等离子体衬底用于产生具有大波矢量的SPPs作为暗场照明。样品在衬底上散射的SPPs成为远场可检测的，并形成衍射受限的暗场图像，其中包含物体上的高k信息。利用预训练的神经网络对衍射受限等离子体暗场图像进行处理，得到超分辨暗场图像。</li>
+<li>在传统的DFM中，斜向暗场照明光产生一个暗场环，不能进入物镜。物镜只收集来自物体的散射光束以形成无背景图像。因此，物体平面上的照明波矢量略大于检测数值孔径（NA），但始终小于k0，即照明光的自由空间波矢量。</li>
+</ol>
+<h1 id="DAPD工作原理示意图"><a href="#DAPD工作原理示意图" class="headerlink" title="DAPD工作原理示意图"></a>DAPD工作原理示意图</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412131001768.png"></p>
+<ol>
+<li>由于光照波矢量的限制，分辨率的提高被限制在2倍。</li>
+<li>如图1a所示，DAPD基板由2层组成，包括发光层和SPP模式支撑层。该发光层（200 nm厚）由透明聚合物与荧光染料混合而成。聚合物中受激发的荧光染料在发射波长处直接耦合到金膜的SPP模式，在每个可能的平面方向上都有SPP k向量金膜上耦合的SPP起到照明作用，只有样品在倏逝波范围内散射，物镜才能采集到SPP。因此，所获得的图像中背景仍然是暗的，这使其成为暗场图像重要的是，在等离子体暗场衬底下，光波矢量由SPP模式的k矢量决定，k矢量总是大于自由空间k0。由于在远场中无法直接检测到SPP波，因此无论在检测中使用何种物镜，该照明方案都确保了干净的暗场背景。</li>
+<li>DAPD工作原理示意图。(a) DAPD衬底示意图。投射在基片上的激光激发了荧光发射层（PMMA中的R6G）。R6G发射光在顶金表面耦合成SPP模式。在Au薄膜顶部的样品被spp照射。散射光被物镜检测并形成暗场图像。(b) SPP照明光、自由空间k向量（k0）、衍射极限检测范围与实际采集到的物体信息之间的傅里叶空间关系。(c)以单帧低分辨率PDF图像作为输入，通过预训练CNN重构超分辨率dpd图像。</li>
+<li>在DAPD中，更高的空间频率信息被编码在衍射受限的图像中。与合成孔径法类似，高k光照SPP将物体上的高空间频率信息转移到有限的检测带宽中。如图1b所示，傅里叶空间中的SPP模式是一个k向量高于物镜检测距离和自由空间k0的环。在衍射极限暗场图像中检测和编码的对象信息是傅里叶空间中的甜甜圈，如图1b所示。在傅里叶空间中，照明、成像系统检测和被检测物体信息之间的关系可以用数学形式表示如下公式，式中，Od为被检测目标信息的傅里叶谱，ISPP为照明SPP模式的傅里叶谱，H为成像系统的相干传递函数。因此，将成像的有效数值孔径（NAeff）定义为NAeff &#x3D; NAobj + NASPP，其中NAobj为物镜的数值孔径，NASPP为照明SPP模式的数值孔径。因此，DAPD原始图像比正常的暗场图像包含更高分辨率的物体信息。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412131010840.png"></p>
+<h1 id="等离子体暗场衬底设计"><a href="#等离子体暗场衬底设计" class="headerlink" title="等离子体暗场衬底设计"></a>等离子体暗场衬底设计</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412131100796.png"></p>
+<ul>
+<li><p>(a)等离子体暗场衬底示意图。(b)不同Au厚度和不同入射角下R6G发射反射率。PMMA的最小反射率出现在46.5°入射处，对应于SPP模式下的1.1k0</p>
+</li>
+<li><p>在等离子体暗场衬底中，如图S1(a)所示，PMMA中R6G的荧光发射耦合到Au薄膜的SPP模式中。设计Au膜的厚度是实现耦合效率最大化的关键。我们考虑p偏振光用于SPP模式的耦合。根据菲涅耳方程，两种材料界面处的透射系数和反射系数可计算为：</p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412131101085.png"></p>
+<ul>
+<li>其中𝑛1和𝑛2分别为材料在界面前后的折射率，𝜃1为入射角，𝜃2为折射角，满足1 1 2 2 sin sin n n &#x3D;。因此，PMMA-Au-Air多层界面的透射和反射系数可计算为：</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412131104915.png"></p>
+<ul>
+<li>式中𝑡01和𝑡12分别为PMMA-Au界面和Au-air界面处的透射系数，𝑟01和𝑟12分别为PMMA-Au界面和Au-air界面处的反射系数，1 1 01 cos z kn k &#x3D; q为k矢量的法向分量，d为Au膜厚度。考虑R6G的发射波长为~570 nm。为了使SPP耦合效率最大化，我们对Au膜的厚度进行了扫描。计算了结构的反射率和透过率，如图S2 (b)所示。SPP耦合的最佳条件对应于入射光的最小反射率，当金的厚度为40 nm时，该反射率出现在入射角≥46.4°处。考虑入射材料PMMA的折射率，SPP模式的k向量为0 0 1.5 sin 1.1 SPP i k k k &#x3D;´×»q。因此，我们在d&#x3D;40 nm处完成了Au膜的设计。</li>
+</ul>
+<h1 id="数据集生成与重建性能的仿真"><a href="#数据集生成与重建性能的仿真" class="headerlink" title="数据集生成与重建性能的仿真"></a>数据集生成与重建性能的仿真</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412131016234.png"></p>
+<ol>
+<li>数据集生成与重建性能的仿真方法。(a)生成带有随机物体的地真超分辨率图像。(b)地面真值信息的傅里叶空间处理。SPP模式照明将物体上的高k信息转移到检测波段，形成图(c)中衍射受限的PDF图像。（d, g）模拟边缘和散射粒子的低分辨率PDF图像，用于网络性能测试。（e, h）网络输出超分辨率DAPD图像。（f, j）对象基础真值。标尺&#x3D; 1 μm</li>
+<li>在超分辨率显微镜中，获得地面真实图像尤其具有挑战性。在这项工作中，考虑到正演成像模型已知，我们基于等离子体衬底和成像系统的设计，采用仿真方法估计任意给定物体的低分辨率等离子体暗场图像，如图2a - c所示。在DAPD中，Au薄膜上的SPP模式照射样品，并通过成像系统检测散射光束。由于非相干荧光照明，PDF图像可以计算为每个SPP模式下图像的叠加。对于给定的对象，低分辨率PDF图像可以估计为式2，式中，U为目标空间信息的傅里叶谱，H为成像系统的相干传递函数，kspp，i为SPP模式在不同方向的k向量，m为SPP模式的总数，n为加性高斯白噪声（信噪比(S&#x2F; n) &#x3D; 35）。通过总结不同SPP模式照明产生的图像强度来计算最终的PDF图像。利用MATLAB R2020b对仿真图像数据集进行了数值生成和处理。如图2b所示，m越大，估计越准确。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412131022247.png"></p>
+<h1 id="数据集仿真中的光照近似"><a href="#数据集仿真中的光照近似" class="headerlink" title="数据集仿真中的光照近似"></a>数据集仿真中的光照近似</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412131109549.png"></p>
+<ol>
+<li>为了模拟等离子体暗场图像，我们<span style="color: red;">首先在MATLAB中以数值方式生成地面真值图像，创建类似于暗场图像典型边缘特征的结构（如线和点）。然后使用傅里叶变换将这些真实图像转换到傅里叶空间中。得到的傅里叶谱根据相应的照明k向量进行移位。然后将相干传递函数应用于对象的位移傅立叶谱。通过对所有照明角度的傅里叶光谱求和并进行傅里叶反变换，我们获得了无噪声的等离子体暗场图像。最后，在图像中加入不同信噪比的高斯噪声作为训练数据。</span></li>
+<li>在PDF数据模拟中，SPP照度被视为不同角度的照度，独立计算。计算的照明角度(m)的个数影响着PDF模拟的精度。我们对比了不同m下的模拟PDF图像，如图S2所示。当m&#x3D;5时，有效相干传递函数（CTF）将无法覆盖傅里叶空间中的整个环，从而在仿真图像中引入不希望的强度变化。当m&#x3D;10时，傅里叶空间中的CTF环是完整的。然而，环内强度的不连续仍然会影响模拟图像的强度均匀性。当m增大到30时，傅里叶空间的不连续大大减弱，PDF图像质量得到改善。当我们继续增大m时，模拟的质量并没有明显的提高，因此在本研究中我们使用m&#x3D;30</li>
+<li>m对模拟等离子体暗场图像的影响。（a-d）不同光照角数（m&#x3D;5、10、30和50）下等离子体暗场模拟的有效相干传递函数。（e-h）对应的仿真PDF图像。标尺：1 μm</li>
+</ol>
+<h1 id="网络模型与损失函数"><a href="#网络模型与损失函数" class="headerlink" title="网络模型与损失函数"></a>网络模型与损失函数</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412131111409.png"></p>
+<ol>
+<li>3000对模拟图像用于训练，批大小设置为15。输入图像被裁剪为256 × 256的大小。在使用模拟数据集进行训练后，我们使用以前未见过的模拟图像测试网络性能。如图2d−1所示，衍射受限的PDF图像被成功地重构为物体的超分辨率暗场图像。利用结构与相似指数度量（SSIM）和峰值信噪比（PSNR）比较网络输出和地物真实度对重建图像进行评价，SSIM为0.9885±0.008，PSNR为33.049±0.019 dB。</li>
+</ol>
+<h1 id="傅里叶频谱和分辨率分析"><a href="#傅里叶频谱和分辨率分析" class="headerlink" title="傅里叶频谱和分辨率分析"></a>傅里叶频谱和分辨率分析</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412131243630.png"></p>
+<ol>
+<li>图像的傅里叶分析。(a)衍射极限PDF图像的傅里叶变换。(b)超分辨率dpd图像的傅里叶变换。(c)同一COS-7细胞的网络输出图像的傅里叶环相关。</li>
+<li>为了证实DAPD分辨率的提高，我们对PDF原始图像和网络输出的DAPD图像的傅里叶谱进行了分析，分别如图S5(a)和S5(b)所示。将图像中的轴转换成相对于自由空间横向部分的空间频率，其中NAobj 为成像系统的数值孔径，<a target="_blank" rel="noopener" href="https://zhidao.baidu.com/question/820167486774546132.html">λ</a>为光的波长。图S5(a)中的黑色圆圈对应0.1 × k，图S5(b)中的黑色圆圈对应0.8 k。我们还使用公式计算了图S5 (c)中PDF图像与DAPD图像之间的傅立叶环相关性（FRC），其中F1为PDF图像的傅里叶变换，F2为dpd图像的傅里叶变换，ri∈r 为图像频域半径为i的环。本实验采用0.6NA物镜，荧光发射峰在~570 nm处。1&#x2F;7 FRC阈值显示分辨率为170 nm，与衍射极限相比，分辨率提高了2.8倍。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412131250005.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412131253304.png"></p>
+<h1 id="200-nm聚苯乙烯微球"><a href="#200-nm聚苯乙烯微球" class="headerlink" title="200 nm聚苯乙烯微球"></a>200 nm聚苯乙烯微球</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412131033256.png"></p>
+<ol>
+<li>我们通过成像直径为200 nm的聚苯乙烯珠（Invitrogen， USA）来证明DAPD的分辨率提高。成像前，将微珠稀释10倍，滴投于DAPD底物上。底物在倒置显微镜（IX83型，Olympus）下成像。我们使用多模光纤引导的532 nm激光作为照明，激发聚甲基丙烯酸甲酯（PMMA）中的罗丹明6G （R6G）。多模光纤连接在一个旋转的偏心电机上，以消除照明中的斑点。然后用40×&#x2F;0.6NA物镜采集散射信号，然后在相机前放大4倍。考虑kspp≈1.1k0，我们得到DAPD显微镜的NAeff≈1.7。采用532 nm陷波滤波器（Semrock）和以588 nm为中心的20 nm带通滤波器（Semrock）阻断激光传输。图3所示的图像是用CCD相机（iXon 897, Andor）记录的，并通过训练好的神经网络进行处理。预计低分辨率图像的分辨率为~ 500 nm。图3c ~ h中的网络输出图像表明，可以清晰地分辨出直径为~ 200nm的聚苯乙烯珠。如图3j所示，双高斯拟合应用于珠子的高分辨率输出图像，显示190 nm的中心到中心距离，对应于~ 2.8倍的分辨率提高，符合理论估计。</li>
+<li>利用200 nm聚苯乙烯微球对dpd进行了实验论证。（a, b, e, f）神经网络处理前的低分辨率PDF图像。（c, d, g, h）超分辨率dpd重建图像。(i)图(a)和(c)中以一对箭头线标记的目标的横截面轮廓。(j)图(e)和(g)中以一对箭头线标记的目标的横截面轮廓。黑线表示原始的低分辨率PDF图像。红色圆圈表示输出图像像素。红色实线表示两个高斯函数的拟合曲线，蓝色虚线表示每个头的单个高斯曲线。标尺&#x3D; 1 μm。</li>
+</ol>
+<h1 id="COS-7细胞"><a href="#COS-7细胞" class="headerlink" title="COS-7细胞"></a>COS-7细胞</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412131035636.png"></p>
+<ol>
+<li>虽然网络在训练过程中没有遇到COS-7细胞，但仍然取得了令人称道的重建效果。图4b−d和图4h−j显示了COS-7细胞未经处理的等离子体暗场（PDF）图像，由于衍射极限，这些图像显得模糊。相比之下，网络的输出如图4e−g和4k−m所示，可以清楚地分辨出靠近衬底表面的细胞特征，小到200nm的结构也可以清晰地识别出来。其他数据，包括傅立叶谱比较和傅立叶环相关结果，如图S5所示。为了说明DAPD实现的分辨率增强，我们还将DAPD重建结果与使用Lucy−Richardson反卷积算法获得的结果进行了比较，如图S6所示。</li>
+<li>用细胞实验数据训练网络性能。(a)单个COS-7单元的PDF图像。左上为衍射极限PDF图像，右下为网络处理后的DAPD图像。（b−d, h−j）用40x &#x2F;0.6NA物镜获得的衍射受限PDF图像。（e−g, k−m） DAPD超分辨图像。比例尺&#x3D;面板(a)为2 μm，其他面板均为1 μm。所有的横截面轮廓都被放大了两倍，以便更好地可视化。</li>
+</ol>
+<h1 id="附录与补遗"><a href="#附录与补遗" class="headerlink" title="附录与补遗"></a>附录与补遗</h1><h2 id="论文中可以引用的部分"><a href="#论文中可以引用的部分" class="headerlink" title="论文中可以引用的部分"></a>论文中可以引用的部分</h2><h1 id="关于文献"><a href="#关于文献" class="headerlink" title="关于文献"></a>关于文献</h1><h2 id="题目及期刊"><a href="#题目及期刊" class="headerlink" title="题目及期刊"></a>题目及期刊</h2><p>题目：Deep Learning Assisted Plasmonic Dark-Field Microscopy for SuperResolution Label-Free Imaging</p>
+<p>深度学习辅助等离子体暗场显微镜超分辨率无标记成像</p>
+<p>期刊：Nano Lett</p>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><ul>
+<li>Lei, M., et al. “Deep Learning Assisted Plasmonic Dark-Field Microscopy for Super-Resolution Label-Free Imaging.” Nano Lett 24.49 (2024): 15724-30. Print.</li>
+</ul>
+<h2 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h2><p>作者：Ming Lei，Junxiang Zhao，Ayse Z. Sahan，Jie Hu，Junxiao Zhou，Hongki Lee，Qianyi Wu，Jin Zhang，and Zhaowei Liu</p>
+<h2 id="发表时间"><a href="#发表时间" class="headerlink" title="发表时间"></a>发表时间</h2><p>日期：2024年</p>
+<h2 id="阅读时间"><a href="#阅读时间" class="headerlink" title="阅读时间"></a>阅读时间</h2><p>日期：2024年12月13日</p>
+<h2 id="开源代码及其它"><a href="#开源代码及其它" class="headerlink" title="开源代码及其它"></a>开源代码及其它</h2><p>GitHub：无。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://YuJiang-LongHoliday.github.io">YuJiang's Long Holiday</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://yujiang-longholiday.github.io/2024/12/13/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%BE%85%E5%8A%A9%E7%AD%89%E7%A6%BB%E5%AD%90%E4%BD%93%E6%9A%97%E5%9C%BA%E6%98%BE%E5%BE%AE%E9%95%9C%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%97%A0%E6%A0%87%E8%AE%B0%E6%88%90%E5%83%8F/">https://yujiang-longholiday.github.io/2024/12/13/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E8%BE%85%E5%8A%A9%E7%AD%89%E7%A6%BB%E5%AD%90%E4%BD%93%E6%9A%97%E5%9C%BA%E6%98%BE%E5%BE%AE%E9%95%9C%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%97%A0%E6%A0%87%E8%AE%B0%E6%88%90%E5%83%8F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://YuJiang-LongHoliday.github.io" target="_blank">YuJiang's Long Holiday</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="post-meta__tags" href="/tags/U-Net/">U-Net</a><a class="post-meta__tags" href="/tags/%E5%82%85%E9%87%8C%E5%8F%B6/">傅里叶</a><a class="post-meta__tags" href="/tags/%E8%A1%AC%E5%BA%95/">衬底</a><a class="post-meta__tags" href="/tags/%E6%9A%97%E5%9C%BA%E6%98%BE%E5%BE%AE%E9%95%9C/">暗场显微镜</a><a class="post-meta__tags" href="/tags/%E5%82%85%E9%87%8C%E5%8F%B6%E7%8E%AF%E7%9B%B8%E5%85%B3-FRC/">傅里叶环相关(FRC)</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202501041851932.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/02/25/%E7%BB%93%E6%9E%84%E5%8F%82%E6%95%B0%E5%AF%B9%E5%87%86%E5%91%A8%E6%9C%9F%E5%85%89%E6%A0%85%E9%AB%98%E9%98%B6%E8%A1%8D%E5%B0%84%E6%8A%91%E5%88%B6%E7%9A%84%E5%BD%B1%E5%93%8D/" title="结构参数对准周期光栅高阶衍射抑制的影响"><img class="cover" src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202502271420588.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">结构参数对准周期光栅高阶衍射抑制的影响</div></div></a></div><div class="next-post pull-right"><a href="/2024/12/11/%E5%9F%BA%E4%BA%8E%E5%8E%BB%E7%9B%B8%E5%85%B3%E5%88%86%E6%9E%90%E7%9A%84%E6%97%A0%E5%8F%82%E6%95%B0%E5%9B%BE%E5%83%8F%E5%88%86%E8%BE%A8%E7%8E%87%E4%BC%B0%E8%AE%A1/" title="基于去相关分析的无参数图像分辨率估计"><img class="cover" src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202412251917776.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">基于去相关分析的无参数图像分辨率估计</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="toc-number">1.</span> <span class="toc-text">论文主体思路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%BB%E8%A6%81%E8%B4%A1%E7%8C%AE"><span class="toc-number">1.1.</span> <span class="toc-text">论文主要贡献</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DAPD%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E7%A4%BA%E6%84%8F%E5%9B%BE"><span class="toc-number">2.</span> <span class="toc-text">DAPD工作原理示意图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AD%89%E7%A6%BB%E5%AD%90%E4%BD%93%E6%9A%97%E5%9C%BA%E8%A1%AC%E5%BA%95%E8%AE%BE%E8%AE%A1"><span class="toc-number">3.</span> <span class="toc-text">等离子体暗场衬底设计</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E7%94%9F%E6%88%90%E4%B8%8E%E9%87%8D%E5%BB%BA%E6%80%A7%E8%83%BD%E7%9A%84%E4%BB%BF%E7%9C%9F"><span class="toc-number">4.</span> <span class="toc-text">数据集生成与重建性能的仿真</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E4%BB%BF%E7%9C%9F%E4%B8%AD%E7%9A%84%E5%85%89%E7%85%A7%E8%BF%91%E4%BC%BC"><span class="toc-number">5.</span> <span class="toc-text">数据集仿真中的光照近似</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">6.</span> <span class="toc-text">网络模型与损失函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%82%85%E9%87%8C%E5%8F%B6%E9%A2%91%E8%B0%B1%E5%92%8C%E5%88%86%E8%BE%A8%E7%8E%87%E5%88%86%E6%9E%90"><span class="toc-number">7.</span> <span class="toc-text">傅里叶频谱和分辨率分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#200-nm%E8%81%9A%E8%8B%AF%E4%B9%99%E7%83%AF%E5%BE%AE%E7%90%83"><span class="toc-number">8.</span> <span class="toc-text">200 nm聚苯乙烯微球</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#COS-7%E7%BB%86%E8%83%9E"><span class="toc-number">9.</span> <span class="toc-text">COS-7细胞</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%99%84%E5%BD%95%E4%B8%8E%E8%A1%A5%E9%81%97"><span class="toc-number">10.</span> <span class="toc-text">附录与补遗</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%AD%E5%8F%AF%E4%BB%A5%E5%BC%95%E7%94%A8%E7%9A%84%E9%83%A8%E5%88%86"><span class="toc-number">10.1.</span> <span class="toc-text">论文中可以引用的部分</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E6%96%87%E7%8C%AE"><span class="toc-number">11.</span> <span class="toc-text">关于文献</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%8F%8A%E6%9C%9F%E5%88%8A"><span class="toc-number">11.1.</span> <span class="toc-text">题目及期刊</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E7%94%A8"><span class="toc-number">11.1.1.</span> <span class="toc-text">引用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E8%80%85%E4%BF%A1%E6%81%AF"><span class="toc-number">11.2.</span> <span class="toc-text">作者信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E8%A1%A8%E6%97%B6%E9%97%B4"><span class="toc-number">11.3.</span> <span class="toc-text">发表时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%85%E8%AF%BB%E6%97%B6%E9%97%B4"><span class="toc-number">11.4.</span> <span class="toc-text">阅读时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E4%BB%A3%E7%A0%81%E5%8F%8A%E5%85%B6%E5%AE%83"><span class="toc-number">11.5.</span> <span class="toc-text">开源代码及其它</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By YuJiang's Long Holiday</div><div class="footer_custom_text">Hi, welcome to my <a target="_blank" rel="noopener" href="https://butterfly.js.org/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

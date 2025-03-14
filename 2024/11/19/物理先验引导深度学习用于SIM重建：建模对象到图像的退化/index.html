@@ -1,0 +1,331 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>物理先验引导深度学习用于SIM重建：建模对象到图像的退化 | YuJiang's Long Holiday</title><meta name="author" content="YuJiang's Long Holiday"><meta name="copyright" content="YuJiang's Long Holiday"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="OIDN基于SIM成像系统的物理退化模型，利用原始输入图像、噪声分量和可学习的PSF构建了一个接近真实的退化过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="物理先验引导深度学习用于SIM重建：建模对象到图像的退化">
+<meta property="og:url" content="https://yujiang-longholiday.github.io/2024/11/19/%E7%89%A9%E7%90%86%E5%85%88%E9%AA%8C%E5%BC%95%E5%AF%BC%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%94%A8%E4%BA%8ESIM%E9%87%8D%E5%BB%BA%EF%BC%9A%E5%BB%BA%E6%A8%A1%E5%AF%B9%E8%B1%A1%E5%88%B0%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%80%E5%8C%96/index.html">
+<meta property="og:site_name" content="YuJiang&#39;s Long Holiday">
+<meta property="og:description" content="OIDN基于SIM成像系统的物理退化模型，利用原始输入图像、噪声分量和可学习的PSF构建了一个接近真实的退化过程。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191921562.jpg">
+<meta property="article:published_time" content="2024-11-19T01:27:08.000Z">
+<meta property="article:modified_time" content="2024-12-13T04:46:05.029Z">
+<meta property="article:author" content="YuJiang&#39;s Long Holiday">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="SIM">
+<meta property="article:tag" content="物理先验">
+<meta property="article:tag" content="点扩散函数(PSF)">
+<meta property="article:tag" content="OIDN">
+<meta property="article:tag" content="去相关分析">
+<meta property="article:tag" content="傅里叶环相关(FRC)">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191921562.jpg"><link rel="shortcut icon" href="/./image/ghosts.png"><link rel="canonical" href="https://yujiang-longholiday.github.io/2024/11/19/%E7%89%A9%E7%90%86%E5%85%88%E9%AA%8C%E5%BC%95%E5%AF%BC%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%94%A8%E4%BA%8ESIM%E9%87%8D%E5%BB%BA%EF%BC%9A%E5%BB%BA%E6%A8%A1%E5%AF%B9%E8%B1%A1%E5%88%B0%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%80%E5%8C%96/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '物理先验引导深度学习用于SIM重建：建模对象到图像的退化',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: true,
+  isToc: true,
+  postUpdate: '2024-12-13 12:46:05'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/font.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./image/touxiang.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">44</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> Link</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Blogroll</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About Me</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191921562.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="YuJiang's Long Holiday"><span class="site-name">YuJiang's Long Holiday</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> Link</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Blogroll</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About Me</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">物理先验引导深度学习用于SIM重建：建模对象到图像的退化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-11-19T01:27:08.000Z" title="发表于 2024-11-19 09:27:08">2024-11-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-12-13T04:46:05.029Z" title="更新于 2024-12-13 12:46:05">2024-12-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB/">文献阅读</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="物理先验引导深度学习用于SIM重建：建模对象到图像的退化"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="论文主体思路"><a href="#论文主体思路" class="headerlink" title="论文主体思路"></a>论文主体思路</h1><h2 id="论文主要贡献"><a href="#论文主要贡献" class="headerlink" title="论文主要贡献"></a>论文主要贡献</h2><ul>
+<li>提出了一种以<span style="color: red;">光学成像物理过程为导向的物像平面退化网络（OIDN）</span>。具体来说，提出的OIDN将目标到图像平面的退化过程嵌入到重建网络中，以提供明确的指导。OIDN利用一组受物理先验约束的可学习点扩展函数（PSF）参数，成功地将传统的图像到图像的数据模式映射转化为高度符合SIM成像光学过程的物体到图像的平面退化映射。</li>
+<li>基于深度学习的SIM重建算法存在两个主要问题：1)重建结果可信度有限：基于DL的重建算法被表示为“黑盒”，使得神经网络如何从有限的输入中产生预期结果变得不清楚，甚至导致错误的重建结构的出现；2)重构模型的泛化性低：这是由于端到端深度学习方法的泛化性与训练样本的大小和种类密切相关。</li>
+<li>提出了一种称为目标到图像平面退化网络（OIDN）的方法。由于SIM系统[31]中照明模式和点扩展函数（PSF）的固有性质，PSF信息隐式编码在微观标本[32]的图像中，这些信息可以用于设计符合SIM物理模型的网络。<span style="color: red;">OIDN基于SIM成像系统的物理退化模型，利用原始输入图像、噪声分量和可学习的PSF构建了一个接近真实的退化过程。</span>此外，为了严格按照SIM成像过程的原理对网络进行优化，利用物理先验来约束PSF的生成，从而在有限的训练数据下获得具有高泛化性的模型。</li>
+</ul>
+<h1 id="空间物理退化过程"><a href="#空间物理退化过程" class="headerlink" title="空间物理退化过程"></a>空间物理退化过程</h1><ul>
+<li>正是PSF的卷积运算导致了高频信息的丢失。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191026979.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191026978.png"></p>
+<h1 id="频率物理退化过程"><a href="#频率物理退化过程" class="headerlink" title="频率物理退化过程"></a>频率物理退化过程</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191049606.png"></p>
+<h1 id="SIM重构过程的物理模型"><a href="#SIM重构过程的物理模型" class="headerlink" title="SIM重构过程的物理模型"></a>SIM重构过程的物理模型</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191055761.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191056583.png"></p>
+<h1 id="物像平面退化网络"><a href="#物像平面退化网络" class="headerlink" title="物像平面退化网络"></a>物像平面退化网络</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191059550.png"></p>
+<ol>
+<li>该过程从3×3卷积层开始，该层将输入的原始图像D(r)转换为多维特征空间。随后，这些特征被输入到一个由四个自适应动态域融合组（ADDG）组成的模块中，每个组都配备了剩余连接。该设计策略性地规避了在过深网络中可能出现的梯度消失问题，从而使网络能够更有效地集中于高频特征的学习。每个ADDG模块由四个自适应动态域融合块（ADDB）、一个3 × 3卷积层和一个短跳接组成。ADDB采用双分支结构，构建动态权值机制减少频域信息损失，采用全局平均池化提取信号整体趋势，全局最大池化重点捕获重要局部特征，实现频域特征的自适应调整。</li>
+</ol>
+<h1 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h1><p>模型的性能不仅取决于其结构，而且还受损失函数的选择的显著影响。认识到这一点，我们<span style="color: red;">制定了一个全面的总损失函数，有效地利用输入图像中固有的高频和低频信息。具体来说，它包括三个不同的组成部分：空间域损耗、频率域损耗和PSF损耗。</span></p>
+<p><span style="color: red;">损失函数示意图看图1右下角！！！</span></p>
+<h2 id="空间损失函数"><a href="#空间损失函数" class="headerlink" title="空间损失函数"></a>空间损失函数</h2><p>由均方误差（MSE）损失[22]和结构相似指数度量（SSIM）损失[37]组合而成的空间域损失函数保证了像素精度，平衡了预测动态范围，并增强了输出图像的结构相似性。若将S(r)定义为SR模型的输出，将S(r)‘ 定义为相应的GT，将（w, h）定义为输出图像的像素大小，则目标函数可表示为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191412385.png"></p>
+<p>其中λ是用于平衡SSIM和MSE相对贡献的标量权重，在本文中大多数情况下设置为0.1。</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p>&#96;&#96;</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">loss_mse_ssim</span>(<span class="params">y_true, y_pred</span>):</span><br><span class="line">    ssim_para = <span class="number">1e-1</span></span><br><span class="line">    mse_para = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># nomolization</span></span><br><span class="line">    x = y_true</span><br><span class="line">    y = y_pred</span><br><span class="line">    <span class="comment"># x = norm(x)</span></span><br><span class="line">    <span class="comment"># y = norm(y)</span></span><br><span class="line">    MSE_loss = nn.MSELoss()</span><br><span class="line">    MSE_loss = MSE_loss.to(device)</span><br><span class="line">    <span class="comment"># SSIMloss = SSIM()</span></span><br><span class="line">    <span class="comment"># SSIMloss = SSIMloss.to(device)</span></span><br><span class="line"></span><br><span class="line">    mse_loss = mse_para * MSE_loss(x, y)</span><br><span class="line">    ssim_loss = ssim_para * (<span class="number">1</span> - pytorch_msssim.ssim(x, y))</span><br><span class="line">    mse_ssim_loss = mse_loss + ssim_loss</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> mse_ssim_loss</span><br></pre></td></tr></table></figure>
+
+<h2 id="频率损失函数"><a href="#频率损失函数" class="headerlink" title="频率损失函数"></a>频率损失函数</h2><p>为了增强网络学习和获取频域信息的能力，在频域对预测输出图像和GT图像施加约束。在本研究中，我们采用Charbonnier Loss作为频率损失函数的主成分。这种选择是战略性的，因为Charbonnier Loss以其在管理异常值方面的有效性而闻名，异常值是图像处理中的一个关键方面[38]。此外，它还显著提高了模型在图像生成任务中的收敛速度和整体性能。利用Charbonnier Loss符合我们在精度和计算效率之间取得平衡的目标，从而优化模型产生高质量图像重建的能力。频域损失函数可以表示为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191423131.png"></p>
+<h3 id="Charbonnier-损失函数"><a href="#Charbonnier-损失函数" class="headerlink" title="Charbonnier 损失函数"></a>Charbonnier 损失函数</h3><p>&#96;&#96;</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">fft2d</span>(<span class="params"><span class="built_in">input</span></span>):</span><br><span class="line">    <span class="comment"># fft.fftn 是 PyTorch 的多维快速傅里叶变换函数。</span></span><br><span class="line">    <span class="comment"># 参数 dim=(2, 3) 表示对输入张量的第 2 和第 3 维（即高度和宽度）进行二维傅里叶变换。</span></span><br><span class="line">    <span class="comment"># 参数 norm=&#x27;ortho&#x27; 表示使用正交归一化方式，确保傅里叶变换是能量守恒的。</span></span><br><span class="line">    fft_out = fft.fftn(<span class="built_in">input</span>, dim=(<span class="number">2</span>, <span class="number">3</span>), norm=<span class="string">&#x27;ortho&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> fft_out</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">CharbonnierLoss</span>(<span class="params">y_true, y_pred</span>):</span><br><span class="line">    <span class="comment"># 定义 Charbonnier 损失的平滑参数</span></span><br><span class="line">    <span class="comment"># epsilon 是 Charbonnier 损失的一个平滑参数，用于避免梯度不稳定问题</span></span><br><span class="line">    epsilon = <span class="number">1e-3</span></span><br><span class="line">    epsilon2 = epsilon*epsilon</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 对输入进行二维傅里叶变换</span></span><br><span class="line">    <span class="comment"># 对输入的真实值和预测值分别应用二维傅里叶变换，将其从时域信号转换为频域信号。</span></span><br><span class="line">    <span class="comment"># fft2d 函数假定是一个支持 PyTorch 张量的自定义或已导入的函数</span></span><br><span class="line">    y_true_fft = fft2d(y_true)</span><br><span class="line">    y_pred_fft = fft2d(y_pred)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 提取频域的实部和虚部</span></span><br><span class="line">    <span class="comment"># 从傅里叶变换结果中提取真实值和预测值的实部和虚部，用于后续计算。</span></span><br><span class="line">    yt_real = y_true_fft.real</span><br><span class="line">    yt_imag = y_true_fft.imag</span><br><span class="line">    yp_real = y_pred_fft.real</span><br><span class="line">    yp_imag = y_pred_fft.imag</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算频域损失</span></span><br><span class="line">    <span class="comment"># 分别计算实部和虚部的 Charbonnier 损失，使用 torch.sqrt 和 epsilon2 保持数值稳定。</span></span><br><span class="line">    <span class="comment"># 最终将实部和虚部的损失相加，得到频域损失。</span></span><br><span class="line">    <span class="comment"># 对所有频域值求平均，返回最终的标量损失值。</span></span><br><span class="line">    real = torch.sqrt(torch.<span class="built_in">pow</span>((yt_real - yp_real), <span class="number">2</span>) + epsilon2)</span><br><span class="line">    imag = torch.sqrt(torch.<span class="built_in">pow</span>((yt_imag - yp_imag), <span class="number">2</span>) + epsilon2)</span><br><span class="line">    value = real + imag</span><br><span class="line">    <span class="keyword">return</span> torch.mean(value)</span><br></pre></td></tr></table></figure>
+
+<h2 id="PSF损失函数"><a href="#PSF损失函数" class="headerlink" title="PSF损失函数"></a>PSF损失函数</h2><p>PSF模块定义了可学习PSF的最终输出，如图1右上角所示。PSF损失函数被设计用来表征最终输出H ‘ (r)与两个物理约束之间的间隙，促使PSF从正确的分布中学习，式中r≡(x, y)为空间位置向量，n为可学习PSF的大小</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191431970.png"></p>
+<p>在这种情况下，使用CE损耗和RS损耗分别量化理想PSF与能量一致性和旋转对称分布的偏差。通过不同维度的区分，可以通过评估不同空间背景下的特征来实现对PSF质量的更全面评估。这种方法对于确保PSF在图像重建过程中的准确性和有效性至关重要。</p>
+<h2 id="总损失函数"><a href="#总损失函数" class="headerlink" title="总损失函数"></a>总损失函数</h2><p>考虑空域、频域和PSF的约束，总损失函数可表示为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191437098.png"></p>
+<p>在损失函数中，α和β是平衡参数。在本研究中，它们分别固定为0.01和1 × 10−3。选择这些值是为了平衡损失函数中不同分量的贡献，确保图像重建过程的各个方面之间的最佳权衡。</p>
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><p>&#96;&#96;</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">loss = args.weight*L1_loss(output, gt_images)+(<span class="number">1</span>-args.weight)*torch.<span class="built_in">abs</span>(<span class="number">1</span>-ssim_loss(output, gt_images))+ (<span class="number">1e-3</span>) * loss_psf + <span class="number">0.01</span> * CharbonnierLoss(gt_images, output)</span><br><span class="line"><span class="comment"># 此处空间损失函数由论文中的MSE+SSIM换成了L1+SSIM</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="损失函数的消融实验"><a href="#损失函数的消融实验" class="headerlink" title="损失函数的消融实验"></a>损失函数的消融实验</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191838108.png"></p>
+<h1 id="三种模型的SIM重构能力评价结果"><a href="#三种模型的SIM重构能力评价结果" class="headerlink" title="三种模型的SIM重构能力评价结果"></a>三种模型的SIM重构能力评价结果</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191810577.png"></p>
+<ol>
+<li>研究中使用的测试图像根据其荧光激发水平分为高、中、低三类。这种分类是至关重要的，因为它确保了成像结果的保真度与SIM通常应用的真实场景一致。该方法可以更准确地评估每种方法在接近实际使用情况下的性能，为其在SIM重建中的实际适用性和有效性提供有价值的见解。</li>
+<li>为了进一步评价三种方法在重建分辨率方面的性能，我们使用去相关分析（DA）来评估超分辨率图像的分辨率。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191815517.png"></p>
+<ol start="3">
+<li>比较HiFi-SIM、DFCAN、APCAN和OIDN在四种类型样本上的评价指标：F-actin（样本量&#x3D; 16）、ER（样本量&#x3D; 18）、CCPs（样本量&#x3D; 19）和MT（样本量&#x3D; 20）。</li>
+</ol>
+<h2 id="基于去相关分析的SR图像分辨率评价"><a href="#基于去相关分析的SR图像分辨率评价" class="headerlink" title="基于去相关分析的SR图像分辨率评价"></a>基于去相关分析的SR图像分辨率评价</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191818214.png"></p>
+<ol>
+<li>对来自APCAN、DFCAN、OIDN和GT的图像（奇列）进行去相关分析（偶列）。绿色曲线表示未经高通滤波的去相关函数；黑色曲线为最高频率峰值的去相关函数；蓝色的点表示去相关函数的局部最大值。比例尺：1nm</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191821934.png"></p>
+<ol start="2">
+<li>低荧光信噪比下不同方法重建SIM图像的比较。每行代表一种类型的标本(第一行：F-actin；第二行：MT；第三行：ER；第四行：ccp)。对于每种类型的标本，两个代表性区域被放大以提供更清晰的视图。比例尺：1µm</li>
+</ol>
+<h1 id="可信度实验比较"><a href="#可信度实验比较" class="headerlink" title="可信度实验比较"></a>可信度实验比较</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191824310.png"></p>
+<ol>
+<li>(a)不同方法重构的SIM结构对比。(b)利用rFRC评价评价不同方法重建的超分辨率图像。</li>
+<li>滚动傅立叶环相关（rFRC）[40]方法用于测量傅立叶域中两个信号之间的距离，对强度变化和微运动不敏感。它通过定义最可靠的频率分量来量化重建误差。rFRC通常用于评估重建不确定性至超分辨率尺度，通过局部图像质量的显示更详细地说明图像的重建质量，可以精确识别不同模型输出图像中可靠性较低的区域。</li>
+<li>经过详细计算，APCAN的平均分辨率为100.95 nm，而DFCAN的平均分辨率为102.86 nm。相比之下，OIDN的平均分辨率为99.93 nm，表现出显著的性能提升。</li>
+<li>相比之下，GT的平均分辨率为82.55 nm，可视化如图5(b)所示。OIDN的最大全像分辨率为154.72 nm，较APCAN （568.19 nm）和DFCAN （505.05 nm）有显著提高，更接近GT （139.23 nm）。这表明OIDN重建的图像不确定度更低，重建质量更可靠。</li>
+</ol>
+<h1 id="概括性实验比较"><a href="#概括性实验比较" class="headerlink" title="概括性实验比较"></a>概括性实验比较</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191832848.png"></p>
+<ol>
+<li>(a) CCPs、MT和ER样本的泛化能力测试，从左至右显示。(b)跨数据集验证评估指标的比较雷达。</li>
+</ol>
+<h1 id="理论PSF与可学PSF的比较结果"><a href="#理论PSF与可学PSF的比较结果" class="headerlink" title="理论PSF与可学PSF的比较结果"></a>理论PSF与可学PSF的比较结果</h1><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191835007.png"></p>
+<ol>
+<li>(a)理论和理想PSF的目视比较。(b) CE、RS和OIDN超分辨率重建图像的PSNR、SSIM和NRMSE评价结果。</li>
+</ol>
+<h1 id="附录与补遗"><a href="#附录与补遗" class="headerlink" title="附录与补遗"></a>附录与补遗</h1><h2 id="滚动傅立叶环相关（rFRC）-40-方法"><a href="#滚动傅立叶环相关（rFRC）-40-方法" class="headerlink" title="滚动傅立叶环相关（rFRC）[40]方法"></a>滚动傅立叶环相关（rFRC）[40]方法</h2><p><a target="_blank" rel="noopener" href="https://www.nature.com/articles/s41377-023-01321-0#code-availability">参考论文</a></p>
+<h2 id="论文中可以引用的部分"><a href="#论文中可以引用的部分" class="headerlink" title="论文中可以引用的部分"></a>论文中可以引用的部分</h2><h1 id="关于文献"><a href="#关于文献" class="headerlink" title="关于文献"></a>关于文献</h1><h2 id="题目及期刊"><a href="#题目及期刊" class="headerlink" title="题目及期刊"></a>题目及期刊</h2><p>题目：Physical prior-guided deep learning for SIM reconstruction: modeling object-to-image degradation</p>
+<p>物理先验引导深度学习用于SIM重建：建模对象到图像的退化</p>
+<p>期刊：Optics Express</p>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><ul>
+<li>Jin, Zitong, et al. “Physical Prior-Guided Deep Learning for Sim Reconstruction: Modeling Object-to-Image Degradation.” Optics Express 32.21 (2024). Print.</li>
+</ul>
+<h2 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h2><p>作者：ZITONG JIN，JUNKANG DAI，BOWEN LIU，ZHIXIANG WEI，ZHENAN FU，HUAIAN CHEN，AND YI JIN</p>
+<h2 id="发表时间"><a href="#发表时间" class="headerlink" title="发表时间"></a>发表时间</h2><p>日期：2024年</p>
+<h2 id="阅读时间"><a href="#阅读时间" class="headerlink" title="阅读时间"></a>阅读时间</h2><p>日期：2024年11月19日</p>
+<h2 id="开源代码及其它"><a href="#开源代码及其它" class="headerlink" title="开源代码及其它"></a>开源代码及其它</h2><p>GitHub：<a target="_blank" rel="noopener" href="https://github.com/USTCdjk/OIDN/tree/master">https://github.com/USTCdjk/OIDN/tree/master</a> (作者)</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://YuJiang-LongHoliday.github.io">YuJiang's Long Holiday</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://yujiang-longholiday.github.io/2024/11/19/%E7%89%A9%E7%90%86%E5%85%88%E9%AA%8C%E5%BC%95%E5%AF%BC%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%94%A8%E4%BA%8ESIM%E9%87%8D%E5%BB%BA%EF%BC%9A%E5%BB%BA%E6%A8%A1%E5%AF%B9%E8%B1%A1%E5%88%B0%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%80%E5%8C%96/">https://yujiang-longholiday.github.io/2024/11/19/%E7%89%A9%E7%90%86%E5%85%88%E9%AA%8C%E5%BC%95%E5%AF%BC%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%94%A8%E4%BA%8ESIM%E9%87%8D%E5%BB%BA%EF%BC%9A%E5%BB%BA%E6%A8%A1%E5%AF%B9%E8%B1%A1%E5%88%B0%E5%9B%BE%E5%83%8F%E7%9A%84%E9%80%80%E5%8C%96/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://YuJiang-LongHoliday.github.io" target="_blank">YuJiang's Long Holiday</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="post-meta__tags" href="/tags/SIM/">SIM</a><a class="post-meta__tags" href="/tags/%E7%89%A9%E7%90%86%E5%85%88%E9%AA%8C/">物理先验</a><a class="post-meta__tags" href="/tags/%E7%82%B9%E6%89%A9%E6%95%A3%E5%87%BD%E6%95%B0-PSF/">点扩散函数(PSF)</a><a class="post-meta__tags" href="/tags/OIDN/">OIDN</a><a class="post-meta__tags" href="/tags/%E5%8E%BB%E7%9B%B8%E5%85%B3%E5%88%86%E6%9E%90/">去相关分析</a><a class="post-meta__tags" href="/tags/%E5%82%85%E9%87%8C%E5%8F%B6%E7%8E%AF%E7%9B%B8%E5%85%B3-FRC/">傅里叶环相关(FRC)</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191921562.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/11/21/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%BD%BF%E7%BB%93%E6%9E%84%E7%85%A7%E6%98%8E%E6%98%BE%E5%BE%AE%E9%95%9C%E5%85%B7%E6%9C%89%E4%BD%8E%E5%85%89%E7%85%A7%E6%B0%B4%E5%B9%B3%E5%92%8C%E5%A2%9E%E5%BC%BA%E7%9A%84%E9%80%9F%E5%BA%A6/" title="深度学习使结构照明显微镜具有低光照水平和增强的速度"><img class="cover" src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411261011961.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">深度学习使结构照明显微镜具有低光照水平和增强的速度</div></div></a></div><div class="next-post pull-right"><a href="/2024/11/18/%E8%BF%88%E5%90%91%E7%A8%B3%E5%81%A5%E7%9A%84%E8%B6%85%E5%88%86%E8%BE%A8%E6%88%90%E5%83%8F%EF%BC%9A%E6%A8%A1%E5%BC%8F%E7%85%A7%E6%98%8E%E5%82%85%E7%AB%8B%E5%8F%B6%E5%B9%B3%E9%9D%A2%E6%91%84%E5%BD%B1%E7%9A%84%E4%BD%8E%E9%98%B6%E8%BF%91%E4%BC%BC%E6%96%B9%E6%B3%95/" title="迈向稳健的超分辨成像：模式照明傅立叶平面摄影的低阶近似方法"><img class="cover" src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191921214.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">迈向稳健的超分辨成像：模式照明傅立叶平面摄影的低阶近似方法</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="toc-number">1.</span> <span class="toc-text">论文主体思路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%BB%E8%A6%81%E8%B4%A1%E7%8C%AE"><span class="toc-number">1.1.</span> <span class="toc-text">论文主要贡献</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A9%BA%E9%97%B4%E7%89%A9%E7%90%86%E9%80%80%E5%8C%96%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">空间物理退化过程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%91%E7%8E%87%E7%89%A9%E7%90%86%E9%80%80%E5%8C%96%E8%BF%87%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">频率物理退化过程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SIM%E9%87%8D%E6%9E%84%E8%BF%87%E7%A8%8B%E7%9A%84%E7%89%A9%E7%90%86%E6%A8%A1%E5%9E%8B"><span class="toc-number">4.</span> <span class="toc-text">SIM重构过程的物理模型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%89%A9%E5%83%8F%E5%B9%B3%E9%9D%A2%E9%80%80%E5%8C%96%E7%BD%91%E7%BB%9C"><span class="toc-number">5.</span> <span class="toc-text">物像平面退化网络</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">6.</span> <span class="toc-text">损失函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A9%BA%E9%97%B4%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">6.1.</span> <span class="toc-text">空间损失函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">6.1.1.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%91%E7%8E%87%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">6.2.</span> <span class="toc-text">频率损失函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Charbonnier-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">6.2.1.</span> <span class="toc-text">Charbonnier 损失函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PSF%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">6.3.</span> <span class="toc-text">PSF损失函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">6.4.</span> <span class="toc-text">总损失函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="toc-number">6.4.1.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%E7%9A%84%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="toc-number">6.5.</span> <span class="toc-text">损失函数的消融实验</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E6%A8%A1%E5%9E%8B%E7%9A%84SIM%E9%87%8D%E6%9E%84%E8%83%BD%E5%8A%9B%E8%AF%84%E4%BB%B7%E7%BB%93%E6%9E%9C"><span class="toc-number">7.</span> <span class="toc-text">三种模型的SIM重构能力评价结果</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E5%8E%BB%E7%9B%B8%E5%85%B3%E5%88%86%E6%9E%90%E7%9A%84SR%E5%9B%BE%E5%83%8F%E5%88%86%E8%BE%A8%E7%8E%87%E8%AF%84%E4%BB%B7"><span class="toc-number">7.1.</span> <span class="toc-text">基于去相关分析的SR图像分辨率评价</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%AF%E4%BF%A1%E5%BA%A6%E5%AE%9E%E9%AA%8C%E6%AF%94%E8%BE%83"><span class="toc-number">8.</span> <span class="toc-text">可信度实验比较</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E6%8B%AC%E6%80%A7%E5%AE%9E%E9%AA%8C%E6%AF%94%E8%BE%83"><span class="toc-number">9.</span> <span class="toc-text">概括性实验比较</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%90%86%E8%AE%BAPSF%E4%B8%8E%E5%8F%AF%E5%AD%A6PSF%E7%9A%84%E6%AF%94%E8%BE%83%E7%BB%93%E6%9E%9C"><span class="toc-number">10.</span> <span class="toc-text">理论PSF与可学PSF的比较结果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%99%84%E5%BD%95%E4%B8%8E%E8%A1%A5%E9%81%97"><span class="toc-number">11.</span> <span class="toc-text">附录与补遗</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BB%9A%E5%8A%A8%E5%82%85%E7%AB%8B%E5%8F%B6%E7%8E%AF%E7%9B%B8%E5%85%B3%EF%BC%88rFRC%EF%BC%89-40-%E6%96%B9%E6%B3%95"><span class="toc-number">11.1.</span> <span class="toc-text">滚动傅立叶环相关（rFRC）[40]方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%AD%E5%8F%AF%E4%BB%A5%E5%BC%95%E7%94%A8%E7%9A%84%E9%83%A8%E5%88%86"><span class="toc-number">11.2.</span> <span class="toc-text">论文中可以引用的部分</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E6%96%87%E7%8C%AE"><span class="toc-number">12.</span> <span class="toc-text">关于文献</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%8F%8A%E6%9C%9F%E5%88%8A"><span class="toc-number">12.1.</span> <span class="toc-text">题目及期刊</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E7%94%A8"><span class="toc-number">12.1.1.</span> <span class="toc-text">引用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E8%80%85%E4%BF%A1%E6%81%AF"><span class="toc-number">12.2.</span> <span class="toc-text">作者信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E8%A1%A8%E6%97%B6%E9%97%B4"><span class="toc-number">12.3.</span> <span class="toc-text">发表时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%85%E8%AF%BB%E6%97%B6%E9%97%B4"><span class="toc-number">12.4.</span> <span class="toc-text">阅读时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E4%BB%A3%E7%A0%81%E5%8F%8A%E5%85%B6%E5%AE%83"><span class="toc-number">12.5.</span> <span class="toc-text">开源代码及其它</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By YuJiang's Long Holiday</div><div class="footer_custom_text">Hi, welcome to my <a target="_blank" rel="noopener" href="https://butterfly.js.org/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

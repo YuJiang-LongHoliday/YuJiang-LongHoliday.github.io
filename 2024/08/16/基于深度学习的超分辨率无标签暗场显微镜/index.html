@@ -1,0 +1,292 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>基于深度学习的超分辨率无标签暗场显微镜 | YuJiang's Long Holiday</title><meta name="author" content="YuJiang's Long Holiday"><meta name="copyright" content="YuJiang's Long Holiday"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="U_Net框架，基于合成孔径思想仿真生成数据对，并对聚苯乙烯珠，HeLa细胞进行重建。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于深度学习的超分辨率无标签暗场显微镜">
+<meta property="og:url" content="https://yujiang-longholiday.github.io/2024/08/16/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%97%A0%E6%A0%87%E7%AD%BE%E6%9A%97%E5%9C%BA%E6%98%BE%E5%BE%AE%E9%95%9C/index.html">
+<meta property="og:site_name" content="YuJiang&#39;s Long Holiday">
+<meta property="og:description" content="U_Net框架，基于合成孔径思想仿真生成数据对，并对聚苯乙烯珠，HeLa细胞进行重建。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202408161439321.jpg">
+<meta property="article:published_time" content="2024-08-16T02:39:12.000Z">
+<meta property="article:modified_time" content="2024-08-15T16:00:00.000Z">
+<meta property="article:author" content="YuJiang&#39;s Long Holiday">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="超分辨率成像">
+<meta property="article:tag" content="显微镜">
+<meta property="article:tag" content="无标签成像">
+<meta property="article:tag" content="U-Net">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202408161439321.jpg"><link rel="shortcut icon" href="/./image/ghosts.png"><link rel="canonical" href="https://yujiang-longholiday.github.io/2024/08/16/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%97%A0%E6%A0%87%E7%AD%BE%E6%9A%97%E5%9C%BA%E6%98%BE%E5%BE%AE%E9%95%9C/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '基于深度学习的超分辨率无标签暗场显微镜',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: true,
+  isToc: true,
+  postUpdate: '2024-08-16 00:00:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/font.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./image/touxiang.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">44</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> Link</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Blogroll</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About Me</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202408161439321.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="YuJiang's Long Holiday"><span class="site-name">YuJiang's Long Holiday</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> Link</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Blogroll</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About Me</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">基于深度学习的超分辨率无标签暗场显微镜</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-08-16T02:39:12.000Z" title="发表于 2024-08-16 10:39:12">2024-08-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-08-15T16:00:00.000Z" title="更新于 2024-08-16 00:00:00">2024-08-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB/">文献阅读</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="基于深度学习的超分辨率无标签暗场显微镜"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="论文主体思路"><a href="#论文主体思路" class="headerlink" title="论文主体思路"></a>论文主体思路</h1><h2 id="论文主要贡献"><a href="#论文主要贡献" class="headerlink" title="论文主要贡献"></a>论文主要贡献</h2><ol>
+<li>提出了一个基于CNN的U_Net框架，用于在不修改标准<mark>暗场显微镜(DFM)</mark>设置的情况下，通过检索斜照射获得的高空间频率信息来实时提高单帧DFM图像的分辨率。</li>
+<li>利用已知的DFM正演过程，我们在不需要实验图像的情况下，根据光学装置的参数，数值生成训练数据集。在模拟数据集上训练网络，检索编码在暗场图像中的高空间频率信息。(一种基于合成孔径思想的仿真方法，在了解物镜NA、照明角度和工作波长等光学知识的情况下，生成低分辨率和超分辨率DFM图像对)</li>
+<li>训练完网络后，评估了它在未见过的模拟图像上的性能。用50×&#x2F;0.55 NA物镜获得的100 nm聚苯乙烯珠对暗场图像进行了超分辨率重建实验。此外，分别对相位目标和HeLa细胞的暗场图像进行超分辨率图像重建。</li>
+</ol>
+<h2 id="暗场显微镜工作原理"><a href="#暗场显微镜工作原理" class="headerlink" title="暗场显微镜工作原理"></a>暗场显微镜工作原理</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202408161338852.png"></p>
+<ol>
+<li>在DFM中，照明的中心部分被暗场环遮挡，如图1(a)所示。照射光通过聚光镜后，光线变得倾斜，以一定角度照射在样品上，此时物镜只能收集来自物体的散射光。</li>
+<li>根据合成孔径的思路，傅立叶空间中环形对应的角度照明模式将物体的高空间频率信息转移到物镜的检测带宽中，如图1(b)所示。</li>
+<li>光学系统可获得的最高空间频率信息受照明和检测物镜的数值孔径(NA)的共同限制。高空间频率信息被编码在衍射极限暗场图像中。因此，通过检索编码的高空间频率信息，可以从检测到的低分辨率图像重构出超分辨率图像(见图1(c))。</li>
+</ol>
+<h2 id="模拟生成数据集"><a href="#模拟生成数据集" class="headerlink" title="模拟生成数据集"></a>模拟生成数据集</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202408161351925.png"></p>
+<ol>
+<li>在非相干光照明下，暗场图像可以看作是每个点源照明在照明暗场环上产生的多个离轴图像的叠加。每个角度照明将物体对应的高空间频率信息转移到物镜的检测带宽中，该带宽为图2(a)的子集所示的傅立叶平面低通滤波器。考虑非相干光照，最终的低分辨率暗场图像ILR可视为各角度光照下的图像之和。近似计算为：</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202408161357916.png"></p>
+<ol start="2">
+<li>同样，包含目标所有可探测高频信息的超分辨率暗场图像ISR可以计算为：</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202408161359368.png"></p>
+<h2 id="不同数据集上的复原效果"><a href="#不同数据集上的复原效果" class="headerlink" title="不同数据集上的复原效果"></a>不同数据集上的复原效果</h2><h3 id="聚苯乙烯珠"><a href="#聚苯乙烯珠" class="headerlink" title="聚苯乙烯珠"></a>聚苯乙烯珠</h3><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202408161409951.png"></p>
+<h3 id="HeLa细胞"><a href="#HeLa细胞" class="headerlink" title="HeLa细胞"></a>HeLa细胞</h3><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202408161410993.png"></p>
+<h2 id="U-Net网络"><a href="#U-Net网络" class="headerlink" title="U_Net网络"></a>U_Net网络</h2><h3 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h3><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202408161433088.png"></p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">double_conv</span>(<span class="params">in_channels, out_channels</span>):</span><br><span class="line">    <span class="keyword">return</span> nn.Sequential(</span><br><span class="line">        nn.Conv2d(in_channels, out_channels, <span class="number">3</span>, padding=<span class="number">1</span>),</span><br><span class="line">        nn.ReLU(inplace=<span class="literal">True</span>),</span><br><span class="line">        nn.Conv2d(out_channels, out_channels, <span class="number">3</span>, padding=<span class="number">1</span>),</span><br><span class="line">        nn.ReLU(inplace=<span class="literal">True</span>)</span><br><span class="line">    )   </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">UNet</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, n_class</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">                </span><br><span class="line">        <span class="variable language_">self</span>.dconv_down1 = double_conv(<span class="number">1</span>, <span class="number">64</span>)</span><br><span class="line">        <span class="variable language_">self</span>.dconv_down2 = double_conv(<span class="number">64</span>, <span class="number">128</span>)</span><br><span class="line">        <span class="variable language_">self</span>.dconv_down3 = double_conv(<span class="number">128</span>, <span class="number">256</span>)</span><br><span class="line">        <span class="variable language_">self</span>.dconv_down4 = double_conv(<span class="number">256</span>, <span class="number">512</span>)        </span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>.maxpool = nn.MaxPool2d(<span class="number">2</span>)</span><br><span class="line">        <span class="variable language_">self</span>.upsample = nn.Upsample(scale_factor=<span class="number">2</span>, mode=<span class="string">&#x27;bilinear&#x27;</span>, align_corners=<span class="literal">True</span>)        </span><br><span class="line">        </span><br><span class="line">        <span class="variable language_">self</span>.dconv_up3 = double_conv(<span class="number">256</span> + <span class="number">512</span>, <span class="number">256</span>)</span><br><span class="line">        <span class="variable language_">self</span>.dconv_up2 = double_conv(<span class="number">128</span> + <span class="number">256</span>, <span class="number">128</span>)</span><br><span class="line">        <span class="variable language_">self</span>.dconv_up1 = double_conv(<span class="number">128</span> + <span class="number">64</span>, <span class="number">64</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="variable language_">self</span>.conv_last = nn.Conv2d(<span class="number">64</span>, n_class, <span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        conv1 = <span class="variable language_">self</span>.dconv_down1(x)</span><br><span class="line">        x = <span class="variable language_">self</span>.maxpool(conv1)</span><br><span class="line"></span><br><span class="line">        conv2 = <span class="variable language_">self</span>.dconv_down2(x)</span><br><span class="line">        x = <span class="variable language_">self</span>.maxpool(conv2)</span><br><span class="line">        </span><br><span class="line">        conv3 = <span class="variable language_">self</span>.dconv_down3(x)</span><br><span class="line">        x = <span class="variable language_">self</span>.maxpool(conv3)   </span><br><span class="line">        </span><br><span class="line">        x = <span class="variable language_">self</span>.dconv_down4(x)</span><br><span class="line">        </span><br><span class="line">        x = <span class="variable language_">self</span>.upsample(x)        </span><br><span class="line">        x = torch.cat([x, conv3], dim=<span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        x = <span class="variable language_">self</span>.dconv_up3(x)</span><br><span class="line">        x = <span class="variable language_">self</span>.upsample(x)        </span><br><span class="line">        x = torch.cat([x, conv2], dim=<span class="number">1</span>)       </span><br><span class="line"></span><br><span class="line">        x = <span class="variable language_">self</span>.dconv_up2(x)</span><br><span class="line">        x = <span class="variable language_">self</span>.upsample(x)        </span><br><span class="line">        x = torch.cat([x, conv1], dim=<span class="number">1</span>)   </span><br><span class="line">        </span><br><span class="line">        x = <span class="variable language_">self</span>.dconv_up1(x)</span><br><span class="line">        </span><br><span class="line">        out = <span class="variable language_">self</span>.conv_last(x)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="附录与补遗"><a href="#附录与补遗" class="headerlink" title="附录与补遗"></a>附录与补遗</h1><h2 id="暗场显微镜"><a href="#暗场显微镜" class="headerlink" title="暗场显微镜"></a>暗场显微镜</h2><ol>
+<li><strong>光线照射方式</strong>：在暗场显微镜中，光线不是直接通过样本照射到观察者的眼睛，而是以一定角度斜射入样本。只有被样本散射或反射的光进入观察视野，直接光线则被阻挡。这使得背景变暗，而样本的边缘和细节由于散射光而明亮。</li>
+<li><strong>高对比度</strong>：由于背景是黑暗的，而样本在黑暗的背景上发光，暗场显微镜提供了高对比度的图像。这有助于观察微小和透明的生物样本，如细菌、血液样本中的细胞、以及其他微生物。</li>
+<li><strong>无染色观察</strong>：暗场显微镜可以在无需染色的情况下观察样本，适用于不想改变或破坏样本的实验。</li>
+</ol>
+<h2 id="无标签成像技术"><a href="#无标签成像技术" class="headerlink" title="无标签成像技术"></a>无标签成像技术</h2><p>无标签成像技术是指在不使用荧光或其他标记物标记样本的情况下，对生物样本或材料进行成像的技术，可以在不改变样本化学成分或结构的情况下，提供样本的高分辨率和高对比度图像。以下是几种常见的无标签成像技术：</p>
+<ol>
+<li><strong>相差显微镜（Phase Contrast Microscopy）</strong>：这项技术通过将样本不同区域的光线相位差转换为亮度差异，从而增强样本中细微结构的对比度。这使得研究者可以在不使用染料的情况下观察活体细胞和组织。</li>
+<li><strong>差分干涉对比显微镜（Differential Interference Contrast, DIC）</strong>：DIC显微镜使用两束偏振光，经过样本后再相互干涉，产生三维立体效果。这种方法可以提供高分辨率的无染色样本的清晰图像。</li>
+<li><strong>共聚焦显微镜（Confocal Microscopy）</strong>：通过使用光学切片技术和激光扫描，共聚焦显微镜能够在不使用荧光染料的情况下获得样本的高分辨率图像。这对于观察活体样本的细微结构非常有用。</li>
+<li><strong>相干反斯托克斯拉曼散射（Coherent Anti-Stokes Raman Scattering, CARS）显微镜</strong>：CARS显微镜利用拉曼散射技术，根据样本分子振动特性生成图像。由于该技术依赖于样本本身的化学特性，因此无需染色或标记。</li>
+<li><strong>光学相干断层扫描（Optical Coherence Tomography, OCT）</strong>：OCT是一种使用近红外光来获取样本微观结构的成像技术。它在医学领域中广泛应用，特别是眼科和心脏病学。</li>
+<li><strong>电子显微镜技术</strong>：扫描电子显微镜（SEM）和透射电子显微镜（TEM）能够在超高分辨率下观察样本的表面和内部结构，而不需要对样本进行化学标记。</li>
+</ol>
+<h1 id="关于文献"><a href="#关于文献" class="headerlink" title="关于文献"></a>关于文献</h1><h2 id="题目及期刊"><a href="#题目及期刊" class="headerlink" title="题目及期刊"></a>题目及期刊</h2><p>题目：Super resolution label-free dark-field microscopy by deep learning</p>
+<p>基于深度学习的超分辨率无标签暗场显微镜</p>
+<p>期刊：Nanoscale(二区)</p>
+<h2 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h2><p>作者：Ming Lei</p>
+<h2 id="发表时间"><a href="#发表时间" class="headerlink" title="发表时间"></a>发表时间</h2><p>日期：2024年1月23日</p>
+<h2 id="阅读时间"><a href="#阅读时间" class="headerlink" title="阅读时间"></a>阅读时间</h2><p>日期：2024年8月16日</p>
+<h2 id="开源代码及其它"><a href="#开源代码及其它" class="headerlink" title="开源代码及其它"></a>开源代码及其它</h2><p>地址：<a target="_blank" rel="noopener" href="https://github.com/ML-UCSD/DLDFM">https://github.com/ML-UCSD/DLDFM</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://YuJiang-LongHoliday.github.io">YuJiang's Long Holiday</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://yujiang-longholiday.github.io/2024/08/16/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%97%A0%E6%A0%87%E7%AD%BE%E6%9A%97%E5%9C%BA%E6%98%BE%E5%BE%AE%E9%95%9C/">https://yujiang-longholiday.github.io/2024/08/16/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%97%A0%E6%A0%87%E7%AD%BE%E6%9A%97%E5%9C%BA%E6%98%BE%E5%BE%AE%E9%95%9C/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://YuJiang-LongHoliday.github.io" target="_blank">YuJiang's Long Holiday</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="post-meta__tags" href="/tags/%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F/">超分辨率成像</a><a class="post-meta__tags" href="/tags/%E6%98%BE%E5%BE%AE%E9%95%9C/">显微镜</a><a class="post-meta__tags" href="/tags/%E6%97%A0%E6%A0%87%E7%AD%BE%E6%88%90%E5%83%8F/">无标签成像</a><a class="post-meta__tags" href="/tags/U-Net/">U-Net</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202408161439321.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/08/17/U-Net-%E7%94%9F%E7%89%A9%E5%8C%BB%E5%AD%A6%E5%9B%BE%E5%83%8F%E5%88%86%E5%89%B2%E7%9A%84%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C/" title="U-Net:生物医学图像分割的卷积网络"><img class="cover" src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202408170941715.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">U-Net:生物医学图像分割的卷积网络</div></div></a></div><div class="next-post pull-right"><a href="/2024/08/14/%E5%9F%BA%E4%BA%8E%E6%9D%A1%E4%BB%B6%E5%AF%B9%E6%8A%97%E7%BD%91%E7%BB%9C%E7%9A%84%E5%9B%BE%E5%83%8F%E5%88%B0%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91/" title="基于条件对抗网络的图像到图像转换(Pix2Pix)"><img class="cover" src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202408141757192.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">基于条件对抗网络的图像到图像转换(Pix2Pix)</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="toc-number">1.</span> <span class="toc-text">论文主体思路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%BB%E8%A6%81%E8%B4%A1%E7%8C%AE"><span class="toc-number">1.1.</span> <span class="toc-text">论文主要贡献</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9A%97%E5%9C%BA%E6%98%BE%E5%BE%AE%E9%95%9C%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">暗场显微镜工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E6%8B%9F%E7%94%9F%E6%88%90%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">1.3.</span> <span class="toc-text">模拟生成数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E5%90%8C%E6%95%B0%E6%8D%AE%E9%9B%86%E4%B8%8A%E7%9A%84%E5%A4%8D%E5%8E%9F%E6%95%88%E6%9E%9C"><span class="toc-number">1.4.</span> <span class="toc-text">不同数据集上的复原效果</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%81%9A%E8%8B%AF%E4%B9%99%E7%83%AF%E7%8F%A0"><span class="toc-number">1.4.1.</span> <span class="toc-text">聚苯乙烯珠</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HeLa%E7%BB%86%E8%83%9E"><span class="toc-number">1.4.2.</span> <span class="toc-text">HeLa细胞</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#U-Net%E7%BD%91%E7%BB%9C"><span class="toc-number">1.5.</span> <span class="toc-text">U_Net网络</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="toc-number">1.5.1.</span> <span class="toc-text">网络结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.5.2.</span> <span class="toc-text">代码</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%99%84%E5%BD%95%E4%B8%8E%E8%A1%A5%E9%81%97"><span class="toc-number">2.</span> <span class="toc-text">附录与补遗</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9A%97%E5%9C%BA%E6%98%BE%E5%BE%AE%E9%95%9C"><span class="toc-number">2.1.</span> <span class="toc-text">暗场显微镜</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A0%E6%A0%87%E7%AD%BE%E6%88%90%E5%83%8F%E6%8A%80%E6%9C%AF"><span class="toc-number">2.2.</span> <span class="toc-text">无标签成像技术</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E6%96%87%E7%8C%AE"><span class="toc-number">3.</span> <span class="toc-text">关于文献</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%8F%8A%E6%9C%9F%E5%88%8A"><span class="toc-number">3.1.</span> <span class="toc-text">题目及期刊</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E8%80%85%E4%BF%A1%E6%81%AF"><span class="toc-number">3.2.</span> <span class="toc-text">作者信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E8%A1%A8%E6%97%B6%E9%97%B4"><span class="toc-number">3.3.</span> <span class="toc-text">发表时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%85%E8%AF%BB%E6%97%B6%E9%97%B4"><span class="toc-number">3.4.</span> <span class="toc-text">阅读时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E4%BB%A3%E7%A0%81%E5%8F%8A%E5%85%B6%E5%AE%83"><span class="toc-number">3.5.</span> <span class="toc-text">开源代码及其它</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By YuJiang's Long Holiday</div><div class="footer_custom_text">Hi, welcome to my <a target="_blank" rel="noopener" href="https://butterfly.js.org/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

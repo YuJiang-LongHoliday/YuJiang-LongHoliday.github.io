@@ -1,0 +1,325 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>基于物理先验卷积网络的荧光显微图像超分辨率重建 | YuJiang's Long Holiday</title><meta name="author" content="YuJiang's Long Holiday"><meta name="copyright" content="YuJiang's Long Holiday"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="提出了一个基于物理先验的卷积超分辨率网络(PCSR)。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于物理先验卷积网络的荧光显微图像超分辨率重建">
+<meta property="og:url" content="https://yujiang-longholiday.github.io/2024/11/18/%E5%9F%BA%E4%BA%8E%E7%89%A9%E7%90%86%E5%85%88%E9%AA%8C%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C%E7%9A%84%E8%8D%A7%E5%85%89%E6%98%BE%E5%BE%AE%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E9%87%8D%E5%BB%BA/index.html">
+<meta property="og:site_name" content="YuJiang&#39;s Long Holiday">
+<meta property="og:description" content="提出了一个基于物理先验的卷积超分辨率网络(PCSR)。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181420246.jpg">
+<meta property="article:published_time" content="2024-11-18T01:19:41.000Z">
+<meta property="article:modified_time" content="2024-11-18T06:21:00.968Z">
+<meta property="article:author" content="YuJiang&#39;s Long Holiday">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="U-Net">
+<meta property="article:tag" content="傅里叶">
+<meta property="article:tag" content="物理先验">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181420246.jpg"><link rel="shortcut icon" href="/./image/ghosts.png"><link rel="canonical" href="https://yujiang-longholiday.github.io/2024/11/18/%E5%9F%BA%E4%BA%8E%E7%89%A9%E7%90%86%E5%85%88%E9%AA%8C%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C%E7%9A%84%E8%8D%A7%E5%85%89%E6%98%BE%E5%BE%AE%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E9%87%8D%E5%BB%BA/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '基于物理先验卷积网络的荧光显微图像超分辨率重建',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: true,
+  isToc: true,
+  postUpdate: '2024-11-18 14:21:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/font.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./image/touxiang.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">44</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> Link</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Blogroll</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About Me</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181420246.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="YuJiang's Long Holiday"><span class="site-name">YuJiang's Long Holiday</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> Link</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Blogroll</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About Me</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">基于物理先验卷积网络的荧光显微图像超分辨率重建</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-11-18T01:19:41.000Z" title="发表于 2024-11-18 09:19:41">2024-11-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-18T06:21:00.968Z" title="更新于 2024-11-18 14:21:00">2024-11-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB/">文献阅读</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="基于物理先验卷积网络的荧光显微图像超分辨率重建"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="论文主体思路"><a href="#论文主体思路" class="headerlink" title="论文主体思路"></a>论文主体思路</h1><h2 id="论文主要贡献"><a href="#论文主要贡献" class="headerlink" title="论文主要贡献"></a>论文主要贡献</h2><ol>
+<li>提出了一个<span style="color: red;">基于物理先验的卷积超分辨率网络(PCSR)</span>，它结合了一个基于物理的损失项和一个基于维纳滤波器的初始优化过程，直接使用低分辨率图像创建优秀的超分辨率图像。实验结果表明，通过在有限的数据集上进行训练，PCSR可以实现100 ms的快速重建时间和10 nm的高空间分辨率，从而实现高时空分辨率、低细胞光毒性光照和高可及性的亚细胞研究。</li>
+<li>为了减轻对高质量数据的依赖，我们提出了物理卷积超分辨率网络（PCSR）从低分辨率WF图像重建SR图像。PCSR由物理反演网络（PIN）和超分辨率网络（SRN）组成。SRN采用先进的网络结构，精确获得高质量的荧光图像。PIN旨在加强输入，促进SRN的训练，并产生改进的结果。具体来说，PIN模拟了荧光成像过程，并逆转了由PSF引起的模糊效应。这种方法将深度学习与物理建模相结合。</li>
+<li>受荧光图像的稀疏性和连续性的物理先验性的启发，我们设计了一种新的由稀疏性损失项和连续性损失项组成的损失函数。为了优化被称为稀疏性和连续性（SC）损失的损失函数，我们用神经网络代替过去传统的方法来实现稀疏性和连续性的重建。SC损失函数会显著影响SR网络的结果。</li>
+<li>研究了从单个LR荧光图像直接重建到SR图像的可能性。首先探索了PCSR对微管WF图像进行SR重建的可行性。然后，我们研究了物理先验对SR重建的影响。此外，我们还证明了PCSR在重建其他活细胞结构中的普遍性。实验结果表明，从单幅LR图像中获得SR图像 时，PCSR可以实现100 ms的快速重建时间和10 nm的高空间分辨率，为快速、准确和可获取的活细胞SR成像提供了可能。</li>
+</ol>
+<h2 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181020422.png"></p>
+<ol>
+<li>物理卷积超分辨率网络(PCSR)包括物理反演网络(PIN)和超分辨率网络(SRN)。</li>
+<li>LR图像首先经过基于维纳滤波的物理反演网络（PIN），再经过超分辨率卷积网络（SRN），实现荧光显微镜图像的超分辨率重建。最后，PCSR计算网络输出与接地真值（GT）之间的损失，然后通过反向传播优化PCSR参数。</li>
+</ol>
+<h3 id="物理反演网络-PIN"><a href="#物理反演网络-PIN" class="headerlink" title="物理反演网络(PIN)"></a>物理反演网络(PIN)</h3><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181024044.png"></p>
+<ol>
+<li>PIN包括伪逆算子求解器(POS)和傅立叶卷积运算(FCO)。PIN的输入由低分辨率（LR）图像和相应系统的点扩散函数（PSF）组成。</li>
+<li>背景噪声的存在会降低图像的重建质量。这个问题可以通过维纳滤波器进行优化[34]，在一定程度上提高重构质量。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181106877.jpg"></p>
+<h3 id="维纳滤波"><a href="#维纳滤波" class="headerlink" title="维纳滤波"></a>维纳滤波</h3><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181049730.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181050761.png"></p>
+<h3 id="Hadamard-Product"><a href="#Hadamard-Product" class="headerlink" title="Hadamard Product"></a>Hadamard Product</h3><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181415458.png"></p>
+<h3 id="GELU"><a href="#GELU" class="headerlink" title="GELU"></a>GELU</h3><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181102993.png"></p>
+<ul>
+<li>GELU表示高斯误差线性单元，它是神经网络的高性能激活函数，是常用的整流线性单元（ReLU）激活函数的光滑变体。</li>
+</ul>
+<h3 id="超分辨率网络-SRN"><a href="#超分辨率网络-SRN" class="headerlink" title="超分辨率网络(SRN)"></a>超分辨率网络(SRN)</h3><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181110113.png"></p>
+<ul>
+<li>在PIN之后，SRN负责SR重建（图3）。它包含了从低分辨率（LR）输入到SR输出学习复杂映射的卷积层。SRN包括编码器网络和解码器网络的对称结构。</li>
+<li>RN的结构。SRN是一种实现超分辨率重构的卷积网络，包括编码器网络和解码器网络。SRN包括三个基本模块，分别是SR模块、下采样模块和上采样模块。</li>
+</ul>
+<h3 id="Loss-Function"><a href="#Loss-Function" class="headerlink" title="Loss Function"></a>Loss Function</h3><ol>
+<li>考虑到高分辨率的荧光显微镜图像变得更加稀疏，细胞结构应该是连续的，尽管在不同的显微镜系统下可能具有不同的外部形状[46]，荧光显微镜图像，如微管，应该遵循物理先验知识的稀疏性和连续性。因此，我们提出在损失函数内使用L1范数和Hessian矩阵作为正则化项来影响PCSR的学习机制。这种新的损失函数被称为<span style="color: red;">稀疏性和连续性损失(SC)</span>。式中，MSE为均方误差，||||1为L1范数，H为Hessian矩阵，λ，µ为正则化系数。</li>
+<li>L1范数表示为||||1，表示每个元素绝对值的和。使用L1范数作为正则化项的目的是产生低像素值，最终导致稀疏解决方案。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181314097.png"></p>
+<ol start="3">
+<li>Hessian矩阵，用H表示，是描述图像在不同方向上二阶导数的二维矩阵。Hessian矩阵通常用于提取边缘，降低噪声，使图像更加连续。这是因为图像的二阶导数对像素值突然变化的区域高度敏感。如果图像的像素值是均匀或一致的，则其黑森矩阵的每个元素趋向于低。通过降低Hessian矩阵的L1范数来平滑图像中的像素变化，具体情况如下：</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181327522.png"></p>
+<ol start="4">
+<li>通过将稀疏性和连续性的物理先验知识作为正则化项纳入损失函数中，神经网络的结果将呈现出稀疏性和连续性的特征。这些特征与我们生成SR显微镜图像的目标一致。</li>
+<li>工作中进一步使用的损失函数如下：</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181326314.png"></p>
+<h2 id="PCSR实现细胞微管结构的超分辨率重建"><a href="#PCSR实现细胞微管结构的超分辨率重建" class="headerlink" title="PCSR实现细胞微管结构的超分辨率重建"></a>PCSR实现细胞微管结构的超分辨率重建</h2><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181330610.png"></p>
+<ul>
+<li><p>（a, b） PCSR实现了从WF图像到STORM超分辨率图像的超分辨率重建（时间分辨率约为100 ms，空间分辨率约为10 nm）。b中的第一列：微管的WF图像。第二列：相同视场下微管的STORM图像。第三列：网络输出的SR图像。</p>
+<p>SR与GT的保真度较高。(c) b中蓝色框框区域放大。(d)左：c中蓝色虚线方向的强度分布。右：c中橙色虚线方向的强度分布。FWHM约为10 nm。比例尺：200nm。</p>
+</li>
+</ul>
+<h2 id="训练细节"><a href="#训练细节" class="headerlink" title="训练细节"></a>训练细节</h2><ol>
+<li>所提出的深度学习网络是在pytorch 1.10和python 3.8环境下进行的。使用的GPU服务器配置8张NVIDIA Tesla v10 - 16g显卡和48个CPU核。训练前，所有数据归一化为8位格式。此外，还对图像进行了水平和垂直翻转等随机数据增强技术。采用Adamw优化算法进行反向传播和参数更新[50]。参数更新的周期设置为400，批大小为16。整个训练过程大约花了2个小时。首先，学习率设置为0.001。在epoch 200时下降。Adamw是由Adam优化器[51]衍生而来的增强算法。它将权重衰减计算与梯度更新计算分离，减轻了权重衰减对梯度更新的影响。<span style="color: red;">为了正确确定SC损耗项的系数，我们计算了GT的L1范数及其Hessian矩阵的L1范数。</span></li>
+</ol>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><h3 id="PCSR与其他网络的比较"><a href="#PCSR与其他网络的比较" class="headerlink" title="PCSR与其他网络的比较"></a>PCSR与其他网络的比较</h3><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181343748.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181345093.png"></p>
+<ol>
+<li>PCSR与其他网络的比较。(a) WF图像、GT、各网络输出。(b) a中的区域被放大。观察到GT中相邻微管的存在，PCSR成功地推断了细节。(c) b. PCSR中沿蓝线的强度分布推断出与GT相似的强度分布。(d)各网络输出的PSNR和SSIM箱形图。比例尺：200nm</li>
+</ol>
+<h2 id="损失函数和物理反演网络对PCSR性能的影响"><a href="#损失函数和物理反演网络对PCSR性能的影响" class="headerlink" title="损失函数和物理反演网络对PCSR性能的影响"></a>损失函数和物理反演网络对PCSR性能的影响</h2><h3 id="SC损耗对网络输出的影响"><a href="#SC损耗对网络输出的影响" class="headerlink" title="SC损耗对网络输出的影响"></a>SC损耗对网络输出的影响</h3><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181351474.png"></p>
+<ul>
+<li>荧光显微镜图像具有固有的物理先验的稀疏性和连续性。为了利用这些先验，我们在PCSR的训练中加入了一个新的SC损失函数。在SC损耗中，连续性损耗项可以提高图像的连续性和平滑性，但会在一定程度上降低图像的分辨率，而稀疏性损耗项可以通过添加高频细节来提高分辨率，使图像变得清晰。通过将SC损失与其他常见损失函数（包括MSE损失和SSIM损失）进行比较，评估SC损失的影响。</li>
+<li>SC损耗改善了网络结果。(a)从左至右：WF图像，GT，网络输出SR使用SC损耗，MSE损耗，SSIM损耗。（b, c） a中的框框区域被放大。与GT类似，SR成功地区分了相邻的微管，并产生了清晰的细节和连续的结构。比例尺：200nm。</li>
+<li>图6展示了使用不同损失函数的网络输出的可视化比较。用SC损失训练的PCSR成功地区分了相邻的微管，产生了与GT非常相似的清晰连续的结构。相比之下，用MSE损失训练的网络无法分辨紧密间隔的微管，导致特征模糊和不清晰。使用SSIM损失训练的网络虽然比MSE损失获得更高的PSNR和SSIM，但引入了严重的伪影，影响了图像的整体质量。</li>
+<li>将SC损失纳入PCSR训练中，大大提高了超分辨率荧光显微镜图像的质量。通过有效地结合稀疏性和连续性原则，SC损失提高了网络产生高保真重建的能力，优于传统的损失函数。这些结果证明了将物理先验整合到损失函数中对于基于深度学习的超分辨率成像的价值。</li>
+</ul>
+<h3 id="物理反演网络提高了WF图像的质量"><a href="#物理反演网络提高了WF图像的质量" class="headerlink" title="物理反演网络提高了WF图像的质量"></a>物理反演网络提高了WF图像的质量</h3><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181354631.png"></p>
+<ul>
+<li>物理反演网络提高了WF图像的质量。(a)微管WF图像和PIN结果。PIN显著提高了WF图像的质量。(b) a中橙色区域被放大。(c) PCSR的损失函数表明PIN促进了网络的训练。蓝线表示添加PIN码(P)，橙线表示不添加PIN码（NP）。P的损失函数收敛曲线下降并快速稳定收敛，而NP的损失函数收敛曲线振荡剧烈。比例尺：200nm。</li>
+<li>利用维纳滤波器加入PIN，显著提高了PCSR的训练效率和稳定性。PIN通过减少伪影和平滑输入来提高WF图像的初始质量，从而促进更有效的网络训练。图7显示了PIN对图像质量和训练动态的影响。随着PIN的加入，网络损失函数收敛速度更快、更稳定，如图7(c)中的蓝线所示。在没有PIN的情况下，损失函数表现出严重的振荡，这表明在训练稳定性方面存在挑战。总体而言，PIN的集成提高了重建质量，加快了训练过程，强调了其在提高网络性能方面的重要性。</li>
+</ul>
+<h1 id="附录与补遗"><a href="#附录与补遗" class="headerlink" title="附录与补遗"></a>附录与补遗</h1><h2 id="论文中可以引用的部分"><a href="#论文中可以引用的部分" class="headerlink" title="论文中可以引用的部分"></a>论文中可以引用的部分</h2><ol>
+<li>将物理先验纳入深度学习的第一种策略是逐步展开基于模型的算法，并用卷积层取代迭代过程。它结合了神经网络的高性能和物理模型的可解释性。第二种策略是设计包含物理先验的损失函数来影响网络的学习机制。它会显著影响神经网络的输出，而神经网络通常用于特定的应用。第三种策略是考虑正演成像物理模型，然后设计相应的逆解算法并与网络相结合。它可以优化网络输入，进一步方便网络训练。换句话说，物理先验的结合是提高神经网络性能和减少对数据依赖的有力工具。</li>
+</ol>
+<h1 id="关于文献"><a href="#关于文献" class="headerlink" title="关于文献"></a>关于文献</h1><h2 id="题目及期刊"><a href="#题目及期刊" class="headerlink" title="题目及期刊"></a>题目及期刊</h2><p>题目：Super resolution reconstruction of fluorescence microscopy images by a convolutional network with physical priors</p>
+<p>基于物理先验卷积网络的荧光显微图像超分辨率重建</p>
+<p>期刊：Biomedical Optics Express</p>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><ul>
+<li>Cai, Qiangyu, et al. “Super Resolution Reconstruction of Fluorescence Microscopy Images by a Convolutional Network with Physical Priors.” Biomedical Optics Express 15.11 (2024). Print.</li>
+</ul>
+<h2 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h2><p>作者：QIANGYU CAI，JUN LU，WENTING GU，DI XIAO，BOYI LI，LEI XU，YUANJIE GU，BIQIN DONG，AND XIN LIU</p>
+<h2 id="发表时间"><a href="#发表时间" class="headerlink" title="发表时间"></a>发表时间</h2><p>日期：2024年</p>
+<h2 id="阅读时间"><a href="#阅读时间" class="headerlink" title="阅读时间"></a>阅读时间</h2><p>日期：2024年11月18日</p>
+<h2 id="开源代码及其它"><a href="#开源代码及其它" class="headerlink" title="开源代码及其它"></a>开源代码及其它</h2><p>GitHub：无</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://YuJiang-LongHoliday.github.io">YuJiang's Long Holiday</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://yujiang-longholiday.github.io/2024/11/18/%E5%9F%BA%E4%BA%8E%E7%89%A9%E7%90%86%E5%85%88%E9%AA%8C%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C%E7%9A%84%E8%8D%A7%E5%85%89%E6%98%BE%E5%BE%AE%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E9%87%8D%E5%BB%BA/">https://yujiang-longholiday.github.io/2024/11/18/%E5%9F%BA%E4%BA%8E%E7%89%A9%E7%90%86%E5%85%88%E9%AA%8C%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C%E7%9A%84%E8%8D%A7%E5%85%89%E6%98%BE%E5%BE%AE%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E9%87%8D%E5%BB%BA/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://YuJiang-LongHoliday.github.io" target="_blank">YuJiang's Long Holiday</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="post-meta__tags" href="/tags/U-Net/">U-Net</a><a class="post-meta__tags" href="/tags/%E5%82%85%E9%87%8C%E5%8F%B6/">傅里叶</a><a class="post-meta__tags" href="/tags/%E7%89%A9%E7%90%86%E5%85%88%E9%AA%8C/">物理先验</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411181420246.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/11/18/%E8%BF%88%E5%90%91%E7%A8%B3%E5%81%A5%E7%9A%84%E8%B6%85%E5%88%86%E8%BE%A8%E6%88%90%E5%83%8F%EF%BC%9A%E6%A8%A1%E5%BC%8F%E7%85%A7%E6%98%8E%E5%82%85%E7%AB%8B%E5%8F%B6%E5%B9%B3%E9%9D%A2%E6%91%84%E5%BD%B1%E7%9A%84%E4%BD%8E%E9%98%B6%E8%BF%91%E4%BC%BC%E6%96%B9%E6%B3%95/" title="迈向稳健的超分辨成像：模式照明傅立叶平面摄影的低阶近似方法"><img class="cover" src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411191921214.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">迈向稳健的超分辨成像：模式照明傅立叶平面摄影的低阶近似方法</div></div></a></div><div class="next-post pull-right"><a href="/2024/11/13/%E9%AB%98%E5%88%86%E8%BE%A8%E7%8E%87%E4%BD%93%E5%86%854D-OCT%E9%B1%BC%E7%9C%BC%E6%88%90%E5%83%8F%EF%BC%8C%E4%BD%BF%E7%94%A83D-UNet%E5%92%8C%E5%A4%9A%E7%BA%A7%E6%AE%8B%E7%95%99%E8%A7%A3%E7%A0%81%E5%99%A8/" title="高分辨率体内4D-OCT鱼眼成像，使用3D-UNet和多级残留解码器"><img class="cover" src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411151006324.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">高分辨率体内4D-OCT鱼眼成像，使用3D-UNet和多级残留解码器</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="toc-number">1.</span> <span class="toc-text">论文主体思路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%BB%E8%A6%81%E8%B4%A1%E7%8C%AE"><span class="toc-number">1.1.</span> <span class="toc-text">论文主要贡献</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.</span> <span class="toc-text">网络结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%A9%E7%90%86%E5%8F%8D%E6%BC%94%E7%BD%91%E7%BB%9C-PIN"><span class="toc-number">1.2.1.</span> <span class="toc-text">物理反演网络(PIN)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%B4%E7%BA%B3%E6%BB%A4%E6%B3%A2"><span class="toc-number">1.2.2.</span> <span class="toc-text">维纳滤波</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hadamard-Product"><span class="toc-number">1.2.3.</span> <span class="toc-text">Hadamard Product</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GELU"><span class="toc-number">1.2.4.</span> <span class="toc-text">GELU</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E7%BD%91%E7%BB%9C-SRN"><span class="toc-number">1.2.5.</span> <span class="toc-text">超分辨率网络(SRN)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Loss-Function"><span class="toc-number">1.2.6.</span> <span class="toc-text">Loss Function</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PCSR%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%83%9E%E5%BE%AE%E7%AE%A1%E7%BB%93%E6%9E%84%E7%9A%84%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E9%87%8D%E5%BB%BA"><span class="toc-number">1.3.</span> <span class="toc-text">PCSR实现细胞微管结构的超分辨率重建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E7%BB%86%E8%8A%82"><span class="toc-number">1.4.</span> <span class="toc-text">训练细节</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">1.5.</span> <span class="toc-text">结论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PCSR%E4%B8%8E%E5%85%B6%E4%BB%96%E7%BD%91%E7%BB%9C%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">1.5.1.</span> <span class="toc-text">PCSR与其他网络的比较</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%E5%92%8C%E7%89%A9%E7%90%86%E5%8F%8D%E6%BC%94%E7%BD%91%E7%BB%9C%E5%AF%B9PCSR%E6%80%A7%E8%83%BD%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-number">1.6.</span> <span class="toc-text">损失函数和物理反演网络对PCSR性能的影响</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SC%E6%8D%9F%E8%80%97%E5%AF%B9%E7%BD%91%E7%BB%9C%E8%BE%93%E5%87%BA%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-number">1.6.1.</span> <span class="toc-text">SC损耗对网络输出的影响</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%A9%E7%90%86%E5%8F%8D%E6%BC%94%E7%BD%91%E7%BB%9C%E6%8F%90%E9%AB%98%E4%BA%86WF%E5%9B%BE%E5%83%8F%E7%9A%84%E8%B4%A8%E9%87%8F"><span class="toc-number">1.6.2.</span> <span class="toc-text">物理反演网络提高了WF图像的质量</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%99%84%E5%BD%95%E4%B8%8E%E8%A1%A5%E9%81%97"><span class="toc-number">2.</span> <span class="toc-text">附录与补遗</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%AD%E5%8F%AF%E4%BB%A5%E5%BC%95%E7%94%A8%E7%9A%84%E9%83%A8%E5%88%86"><span class="toc-number">2.1.</span> <span class="toc-text">论文中可以引用的部分</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E6%96%87%E7%8C%AE"><span class="toc-number">3.</span> <span class="toc-text">关于文献</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%8F%8A%E6%9C%9F%E5%88%8A"><span class="toc-number">3.1.</span> <span class="toc-text">题目及期刊</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E7%94%A8"><span class="toc-number">3.1.1.</span> <span class="toc-text">引用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E8%80%85%E4%BF%A1%E6%81%AF"><span class="toc-number">3.2.</span> <span class="toc-text">作者信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E8%A1%A8%E6%97%B6%E9%97%B4"><span class="toc-number">3.3.</span> <span class="toc-text">发表时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%85%E8%AF%BB%E6%97%B6%E9%97%B4"><span class="toc-number">3.4.</span> <span class="toc-text">阅读时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E4%BB%A3%E7%A0%81%E5%8F%8A%E5%85%B6%E5%AE%83"><span class="toc-number">3.5.</span> <span class="toc-text">开源代码及其它</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By YuJiang's Long Holiday</div><div class="footer_custom_text">Hi, welcome to my <a target="_blank" rel="noopener" href="https://butterfly.js.org/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

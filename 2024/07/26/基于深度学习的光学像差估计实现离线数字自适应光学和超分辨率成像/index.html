@@ -1,0 +1,319 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>基于深度学习的光学像差估计实现离线数字自适应光学和超分辨率成像 | YuJiang's Long Holiday</title><meta name="author" content="YuJiang's Long Holiday"><meta name="copyright" content="YuJiang's Long Holiday"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="第一个网络可以从图像中获得带像差的pdf并通过反卷积消除像差，第二个网络能实现即时数字AO和光学像差感知超分辨率重建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于深度学习的光学像差估计实现离线数字自适应光学和超分辨率成像">
+<meta property="og:url" content="https://yujiang-longholiday.github.io/2024/07/26/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%85%89%E5%AD%A6%E5%83%8F%E5%B7%AE%E4%BC%B0%E8%AE%A1%E5%AE%9E%E7%8E%B0%E7%A6%BB%E7%BA%BF%E6%95%B0%E5%AD%97%E8%87%AA%E9%80%82%E5%BA%94%E5%85%89%E5%AD%A6%E5%92%8C%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F/index.html">
+<meta property="og:site_name" content="YuJiang&#39;s Long Holiday">
+<meta property="og:description" content="第一个网络可以从图像中获得带像差的pdf并通过反卷积消除像差，第二个网络能实现即时数字AO和光学像差感知超分辨率重建">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Demo202407252227851.jpg">
+<meta property="article:published_time" content="2024-07-26T01:39:38.000Z">
+<meta property="article:modified_time" content="2024-11-19T16:00:00.000Z">
+<meta property="article:author" content="YuJiang&#39;s Long Holiday">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="光学像差">
+<meta property="article:tag" content="U-Net">
+<meta property="article:tag" content="DFCAN">
+<meta property="article:tag" content="傅里叶">
+<meta property="article:tag" content="物理先验">
+<meta property="article:tag" content="点扩散函数(PSF)">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Demo202407252227851.jpg"><link rel="shortcut icon" href="/./image/ghosts.png"><link rel="canonical" href="https://yujiang-longholiday.github.io/2024/07/26/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%85%89%E5%AD%A6%E5%83%8F%E5%B7%AE%E4%BC%B0%E8%AE%A1%E5%AE%9E%E7%8E%B0%E7%A6%BB%E7%BA%BF%E6%95%B0%E5%AD%97%E8%87%AA%E9%80%82%E5%BA%94%E5%85%89%E5%AD%A6%E5%92%8C%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '基于深度学习的光学像差估计实现离线数字自适应光学和超分辨率成像',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: true,
+  isToc: true,
+  postUpdate: '2024-11-20 00:00:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/font.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/./image/touxiang.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">44</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">36</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> Link</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Blogroll</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About Me</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Demo202407252227851.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="YuJiang's Long Holiday"><span class="site-name">YuJiang's Long Holiday</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> Link</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Blogroll</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About Me</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">基于深度学习的光学像差估计实现离线数字自适应光学和超分辨率成像</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-07-26T01:39:38.000Z" title="发表于 2024-07-26 09:39:38">2024-07-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-19T16:00:00.000Z" title="更新于 2024-11-20 00:00:00">2024-11-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB/">文献阅读</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>10分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="基于深度学习的光学像差估计实现离线数字自适应光学和超分辨率成像"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="论文主体思路"><a href="#论文主体思路" class="headerlink" title="论文主体思路"></a>论文主体思路</h1><ol>
+<li>首先设计了空间频率编码网络(SFE-Net)，可直接从单个显微镜图像中提取有像差的PSF，并且利用估计的PSF通过反卷积算法可以基本消除相应的像差。</li>
+<li>设计了空间特征转换引导(SFT)深傅立叶通道注意网络(SFT-DFCAN)。利用SFE-Net估计的PSF输入到SFT-DFCAN模型。证明了SFE-Net和SFT-DFCAN的结合可以实现活细胞成像的即时数字AO和光学像差感知超分辨率重建。</li>
+<li>提出了一种新的空频编码网络（SFE-Net），它可以直接从生物图像中估计像差点扩展函数（psf），从而实现快速、高精度的光学像差估计，而无需额外的光学器件和图像采集。结果表明，利用估计的psf，通过反卷积算法可以计算地去除光学像差。</li>
+</ol>
+<h2 id="自适应光学-AO"><a href="#自适应光学-AO" class="headerlink" title="自适应光学(AO)"></a>自适应光学(AO)</h2><ol>
+<li>AO的实现一般包括两个主要部分：像差检测和像差校正。</li>
+<li>为了测量光学或样品引起的像差，开发了直接和间接波前传感方法。直接波前传感方法利用专用波前传感器，主要是Shack-Hartmann传感器，以及用于像差检测的额外光路。相比之下，间接波前传感方法在没有特定波前传感器的情况下表征像差，而是通过区域或模态方法通过重复采集计算确定像差。</li>
+</ol>
+<h2 id="深度学习部分"><a href="#深度学习部分" class="headerlink" title="深度学习部分"></a>深度学习部分</h2><h3 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h3><ul>
+<li>使用BioSR(<a target="_blank" rel="noopener" href="https://figshare.com/articles/dataset/BioSR/13264793">开源数据集</a>)的GT-SIM图像作为生物荧光标本。根据光学成像模型，这些图像被有意地降级，可以表示为：</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411200955935.png"></p>
+<p>其中I为光学成像系统捕获的像差宽视场（WF）图像；S为生物标本，即GT-SIM图像；*表示卷积算子；NPoisson(.)表示泊松重构；G(0， σ2)为均值为0，方差为σ2的高斯白噪声；PSFZernike为像差点扩散函数，其瞳孔函数由Zernike多项式4-18 （Wyant排序）加权求和构造。这些函数可以用数学公式表示如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411201000990.png"></p>
+<p>式中，Zn和an分别表示泽尼克多项式和n阶系数。A(.)为圆形apodiization函数，其半径由发射波长和探测数值孔径（NA）决定。F−1{.}表示快速傅里叶反变换算子。</p>
+<p>每一阶的系数an随机抽样于均值为零、标准差为0.125的正态分布。我们为所有采样an设置了[−1,1 ]的上限和下限，以避免可能破坏训练过程稳定的极高或极低的值。由于a服从正态分布N(0, 0.125)，边界较松，因此产生的像差的均方根（RMS）近似服从重新标化的chi分布，其可表示为:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411201002424.png"></p>
+<p>其中λ为发射波长。因此，训练和测试数据集的总均方根范围为[0,7.38 λ]。</p>
+<ul>
+<li>在训练过程中，将像差PSF图像PSFZernike作为PSF估计网络模型（SFE-Net）的目标，将GT-SIM图像S作为SFT-DFCAN等单图像超分辨率（SISR）网络模型的目标。</li>
+</ul>
+<h3 id="网络模型"><a href="#网络模型" class="headerlink" title="网络模型"></a>网络模型</h3><h4 id="空间频率编码网络-SFE-Net"><a href="#空间频率编码网络-SFE-Net" class="headerlink" title="空间频率编码网络(SFE-Net)"></a>空间频率编码网络(SFE-Net)</h4><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202407261402161.png" alt="图1"></p>
+<ol>
+<li>SFE-Net的架构如图所示，由双支路编码器和基于unet的解码器组成。</li>
+<li><font color="RED">编码器网络由空间分支(SB)和频率分支(FB)两个并行分支组成，分别在空间和频率域提取深度特征。</font>在这两个分支中，都采用了改进的残差通道注意网络(RCAN)，该网络有4个残差组*4个残差通道注意块(residual channel attention block)。FB分支经快速傅里叶变换层后，依次进行模算子和对数算子，从而将图像特征编码到傅里叶域中。</li>
+<li>该解码器主要由U-net特征提取器和降阶模块两部分组成。我们采用了一个比较深的U-net模型[11]，它以一个双卷积块（图1(c)）开始，然后是5个低尺度块（图1(d)）和5个高尺度块（图1(e)），其中5个跳跃连接桥接相同尺度的特征。在每个降尺度块中，使用最大池化层和双卷积块进行降尺度和特征提取。在Up模块中，<font color="RED">使用Pixel Shuffle来提升特征通道。</font>(Pixel Shuffle的核心思想是将低分辨率特征图中的多个通道的数值重新排列到高分辨率图像的空间位置上)。</li>
+<li>U-Net网络的输出到downscale模块中，该模块由两个2x向下洗牌层和四个卷积- relu块组成。在每个卷积- relu块中，将卷积层的stride参数设置为2，使downscale模块能够将输入的132 × 132像素的特征映射转换为33 × 33像素的PSF图像。</li>
+</ol>
+<h4 id="空间特征变换引导的深傅立叶通道注意网络-SFT-DFCAN"><a href="#空间特征变换引导的深傅立叶通道注意网络-SFT-DFCAN" class="headerlink" title="空间特征变换引导的深傅立叶通道注意网络(SFT-DFCAN)"></a>空间特征变换引导的深傅立叶通道注意网络(SFT-DFCAN)</h4><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202407261439904.png" alt="图2"></p>
+<ol>
+<li>SFT-DFCAN的整体架构如图2(a)所示，它是根据我们之前提出的最先进的DLSR模型DFCAN[9]进行修改的，DFCAN[9]经过训练可以直接将WF图像转换为SR图像。</li>
+<li>这里，为了将PSF和像差信息传递给图像SR处理，受SFTMD模型[12]的启发，我们将原始的傅立叶通道注意块（FCAB）更新为空间特征转换引导的FCAB (SFT-FCAB)，该FCAB可以利用嵌入的PSF信息自适应地重新缩放SFT-FCAB中的空间特征。具体来说，我们使用主成分分析将PSF投影到维度为b的线性空间上。然后将该投影的PSF拉伸成大小为b × H × W的PSF嵌入，该嵌入作为每个SFT-FCAB的输入。在每个SFT-FCAB中，PSF嵌入通过两个con - relu块与生物结构的空间特征映射相结合，对输入特征映射进行缩放和移位。随后，实现FCA层[图2(c)]进行深度特征提取和聚合。最后，重构的SR图像由上采样模块生成，该上采样模块依次由卷积- gelu块[13]、像素shuffle层[14]和最后的卷积层组成。</li>
+</ol>
+<h3 id="SFE-Net的训练"><a href="#SFE-Net的训练" class="headerlink" title="SFE-Net的训练"></a>SFE-Net的训练</h3><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411201042682.png"></p>
+<ol>
+<li><p>对于SFE-Net的训练，我们在每次迭代中随机生成对像差WF （132 × 132像素）及其对应的PSF （33 × 33像素）。(1)和(2)利用多个生物标本的~ 200张原始GT-SIM图像，包括空心网格蛋白包覆坑（CCPs）、内质网（ER）和交叉微管（MTs），以赋予训练模型良好的泛化能力。SFE-Net的整体数据增强工作流程和训练过程如图3所示。对于SFT-DFCAN等SISR模型，我们在每次迭代中随机生成像差WF图像（132 × 132像素）、真地psf图像（33 × 33像素）和相应的GTSIM图像（264 × 264像素）的三组图像作为训练数据集。SFE-Net和SISR模型的目标函数都定义为均方误差，它量化了网络输出与目标图像之间的差异。</p>
+</li>
+<li><p>在训练过程中，我们使用初始学习为5 × 10−5的Adam优化器。SFT-Net的学习率在每~ 10,000个小批量迭代后衰减0.5倍，而SFT-DFCAN的学习率遵循余弦退火计划，每12500个小批量迭代重新启动。我们对SFE-Net和SFT-DFCAN分别采用了4和8个批大小。通常情况下，SFE-Net和SFT-DFCAN的总训练迭代次数为15万次和50万次，在RTX 3090 GPU下分别耗时约16小时和30小时。</p>
+<p>在推理阶段，SFE-Net通过将输入图像（512 × 512）分割成若干块来捕获光学像差的空间变化，通常需要不到1.5 s（单个图像patch为30 ms）来生成PSF矩阵（7 × 7 × 33 × 33）。以WF图像和估计的PSF作为输入，训练良好的SFT-DFCAN模型可以在1 s内重建出1024 × 1024像素的无像差SR图像。</p>
+</li>
+</ol>
+<h3 id="验证SFE-Net网络能高精度估计像差PSF"><a href="#验证SFE-Net网络能高精度估计像差PSF" class="headerlink" title="验证SFE-Net网络能高精度估计像差PSF"></a>验证SFE-Net网络能高精度估计像差PSF</h3><ul>
+<li><p>与其他模型估计的PSF进行比较说明SFE-Net网络的高精度性。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202407261504253.png"></p>
+</li>
+</ul>
+<h3 id="PSF和光学像差的先验知识可以提高SISR的性能"><a href="#PSF和光学像差的先验知识可以提高SISR的性能" class="headerlink" title="PSF和光学像差的先验知识可以提高SISR的性能"></a>PSF和光学像差的先验知识可以提高SISR的性能</h3><p><img src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202411201059595.png"></p>
+<ol>
+<li>利用估计的PSF进行像差感知图像的超分辨率重建。(a) DFCAN和SFT-DFCAN利用KernelGAN、IKC、MANet和SFE-Net获得的psf重构的代表性SR图像。提供了低分辨率图像和高分辨率GT图像供参考。在每张重建的SR图像的右上角显示相应的估计PSF图像。比例尺、1 μm、0.5 μm（放大区域）。(b) DFCAN和SFT-DFCAN输出的SR图像的PSNR值与KernelGAN、IKC、MANet和SFE-Net估计的psf值的统计比较（n  30）。</li>
+<li><font color="RED">SISR网络已经被开发出来，以端到端方式即时增强生物图像的分辨率，而不考虑图像形成模型[9]。最近的研究表明，结合物理先验知识，如PSF，可以提高超分辨率网络的性能。鉴于所提出的SFE-Net从低分辨率图像中识别PSF的卓越能力，我们认为结合PSF和光学像差的先验知识可以提高SISR的性能。</font>为了验证这一假设，我们将SFT层[12]与我们之前提出的DFCAN模型[9]结合起来设计了SFT-DFCAN，该模型利用了像差的PSF信息和傅里叶通道注意机制来增强图像超分辨率的性能。</li>
+<li>特别是在SFT-DFCAN中，特征映射是仿射变换的，通过缩放和移位操作，这些操作取决于估计的PSF和像差，从而使PSF信息能够自适应编码到神经网络中。</li>
+</ol>
+<h1 id="附录与补遗"><a href="#附录与补遗" class="headerlink" title="附录与补遗"></a>附录与补遗</h1><h2 id="光学像差"><a href="#光学像差" class="headerlink" title="光学像差"></a>光学像差</h2><ol>
+<li>光学像差降低了荧光显微镜的性能。</li>
+<li>传统的自适应光学(AO)利用特定的设备(额外的硬件或复杂的成像程序)从而导致高成本和低采样速率，如Shack-Hartmann波前传感器和变形镜，来测量和纠正光学像差。(自适应光学(AO)包括两个主要部分:像差检测和像差校正。)</li>
+<li>理想的光学成像依赖于激发光的高质量聚焦和荧光样品发射光的精确检测。显微镜中的光学元件和所研究的生物样品都会引入像差，从而导致分辨率下降，荧光光子损失和信号与背景比(SBR)恶化等。例如，成像系统中光学元件的光学制造缺陷或不对准会造成一定的像差，如球面像差和彗差，而生物标本的折射率不均匀性会带来更复杂的像差。</li>
+<li><font color="red">高数值孔径(NA)的显微镜，特别是超分辨率显微镜，对像差更敏感，因为高NA的物镜更容易受到高阶像差的影响。</font></li>
+<li>对于一个完善的光学成像系统，在活细胞成像实验中最常见的像差是离焦和球差。这些像差通常是由聚焦平面的漂移、样品的轴向运动以及样品与盖滑移之间的折射率不对准引起的。</li>
+</ol>
+<h2 id="PSF"><a href="#PSF" class="headerlink" title="PSF"></a>PSF</h2><ol>
+<li><font color="red">在光学成像系统中，图像质量和像差通常由它们的点扩展函数(PSF)来表征，它隐含地编码在显微镜图像的任何标本斑块中。</font></li>
+<li>显微图像PSF的盲估计技术进展有限。原因是双重的。首先，由于复杂的光学系统和样品散射，生物成像遇到的光学像差比商用相机摄影严重得多。其次，直接从生物图像中估计像差PSF本质上是一个不适定问题，使得它在直觉上是不可行的。尽管如此，基于图像的PSF和光像差估计对生物成像有很大的好处，它消除了AO系统中对波前传感器的需求，同时促进了数字像差校正和像差感知的图像超分辨率重建。</li>
+<li>为了解决上述问题，我们首先探索了几种有代表性的有监督或无监督核估计算法来估计生物图像的核，即像差PSF。这些算法包括无监督核生成对抗网络（KernelGAN）[15,18]，迭代核校正（IKC）[12]，以及用于空间变异核估计的监督互仿射网络（MANet）[17]。</li>
+</ol>
+<h1 id="关于文献"><a href="#关于文献" class="headerlink" title="关于文献"></a>关于文献</h1><h2 id="题目及期刊"><a href="#题目及期刊" class="headerlink" title="题目及期刊"></a>题目及期刊</h2><p>题目：Deep Learning-based Optical Aberration Estimation Enables Offline Digital Adaptive Optics and Super-resolution Imaging</p>
+<p>​            基于深度学习的光学像差估计实现离线数字自适应光学和超分辨率成像</p>
+<p>期刊：Photonics Research</p>
+<h2 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h2><p>作者：Chang Qiao(清华大学自动化系)</p>
+<h2 id="发表时间"><a href="#发表时间" class="headerlink" title="发表时间"></a>发表时间</h2><p>日期：2023年11月1日</p>
+<h2 id="阅读时间"><a href="#阅读时间" class="headerlink" title="阅读时间"></a>阅读时间</h2><p>日期：2024年7月26日-2024年7月27日</p>
+<p>2024年11月20日重读</p>
+<h2 id="开源代码"><a href="#开源代码" class="headerlink" title="开源代码"></a>开源代码</h2><p><a target="_blank" rel="noopener" href="https://github.com/HypnosRin/SFE-Net">https://github.com/HypnosRin/SFE-Net</a> (作者)</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://YuJiang-LongHoliday.github.io">YuJiang's Long Holiday</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://yujiang-longholiday.github.io/2024/07/26/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%85%89%E5%AD%A6%E5%83%8F%E5%B7%AE%E4%BC%B0%E8%AE%A1%E5%AE%9E%E7%8E%B0%E7%A6%BB%E7%BA%BF%E6%95%B0%E5%AD%97%E8%87%AA%E9%80%82%E5%BA%94%E5%85%89%E5%AD%A6%E5%92%8C%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F/">https://yujiang-longholiday.github.io/2024/07/26/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%85%89%E5%AD%A6%E5%83%8F%E5%B7%AE%E4%BC%B0%E8%AE%A1%E5%AE%9E%E7%8E%B0%E7%A6%BB%E7%BA%BF%E6%95%B0%E5%AD%97%E8%87%AA%E9%80%82%E5%BA%94%E5%85%89%E5%AD%A6%E5%92%8C%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://YuJiang-LongHoliday.github.io" target="_blank">YuJiang's Long Holiday</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="post-meta__tags" href="/tags/%E5%85%89%E5%AD%A6%E5%83%8F%E5%B7%AE/">光学像差</a><a class="post-meta__tags" href="/tags/U-Net/">U-Net</a><a class="post-meta__tags" href="/tags/DFCAN/">DFCAN</a><a class="post-meta__tags" href="/tags/%E5%82%85%E9%87%8C%E5%8F%B6/">傅里叶</a><a class="post-meta__tags" href="/tags/%E7%89%A9%E7%90%86%E5%85%88%E9%AA%8C/">物理先验</a><a class="post-meta__tags" href="/tags/%E7%82%B9%E6%89%A9%E6%95%A3%E5%87%BD%E6%95%B0-PSF/">点扩散函数(PSF)</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Demo202407252227851.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/2024/07/29/%E5%9F%BA%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E8%B6%85%E9%80%8F%E9%95%9C%E4%BA%9A%E8%A1%8D%E5%B0%84%E6%9E%81%E9%99%90%E5%9B%BE%E6%A1%88%E7%9A%84%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87%E6%88%90%E5%83%8F/" title="基于深度学习的超透镜亚衍射极限图案的超分辨率成像"><img class="cover" src="https://cdn.jsdelivr.net/gh/YuJiang-LongHoliday/Blog_Picture/Article/202407291439695.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">基于深度学习的超透镜亚衍射极限图案的超分辨率成像</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BA%E6%96%87%E4%B8%BB%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="toc-number">1.</span> <span class="toc-text">论文主体思路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E9%80%82%E5%BA%94%E5%85%89%E5%AD%A6-AO"><span class="toc-number">1.1.</span> <span class="toc-text">自适应光学(AO)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E9%83%A8%E5%88%86"><span class="toc-number">1.2.</span> <span class="toc-text">深度学习部分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">1.2.1.</span> <span class="toc-text">数据集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.2.2.</span> <span class="toc-text">网络模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A9%BA%E9%97%B4%E9%A2%91%E7%8E%87%E7%BC%96%E7%A0%81%E7%BD%91%E7%BB%9C-SFE-Net"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">空间频率编码网络(SFE-Net)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A9%BA%E9%97%B4%E7%89%B9%E5%BE%81%E5%8F%98%E6%8D%A2%E5%BC%95%E5%AF%BC%E7%9A%84%E6%B7%B1%E5%82%85%E7%AB%8B%E5%8F%B6%E9%80%9A%E9%81%93%E6%B3%A8%E6%84%8F%E7%BD%91%E7%BB%9C-SFT-DFCAN"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">空间特征变换引导的深傅立叶通道注意网络(SFT-DFCAN)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SFE-Net%E7%9A%84%E8%AE%AD%E7%BB%83"><span class="toc-number">1.2.3.</span> <span class="toc-text">SFE-Net的训练</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81SFE-Net%E7%BD%91%E7%BB%9C%E8%83%BD%E9%AB%98%E7%B2%BE%E5%BA%A6%E4%BC%B0%E8%AE%A1%E5%83%8F%E5%B7%AEPSF"><span class="toc-number">1.2.4.</span> <span class="toc-text">验证SFE-Net网络能高精度估计像差PSF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PSF%E5%92%8C%E5%85%89%E5%AD%A6%E5%83%8F%E5%B7%AE%E7%9A%84%E5%85%88%E9%AA%8C%E7%9F%A5%E8%AF%86%E5%8F%AF%E4%BB%A5%E6%8F%90%E9%AB%98SISR%E7%9A%84%E6%80%A7%E8%83%BD"><span class="toc-number">1.2.5.</span> <span class="toc-text">PSF和光学像差的先验知识可以提高SISR的性能</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%99%84%E5%BD%95%E4%B8%8E%E8%A1%A5%E9%81%97"><span class="toc-number">2.</span> <span class="toc-text">附录与补遗</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%89%E5%AD%A6%E5%83%8F%E5%B7%AE"><span class="toc-number">2.1.</span> <span class="toc-text">光学像差</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PSF"><span class="toc-number">2.2.</span> <span class="toc-text">PSF</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E6%96%87%E7%8C%AE"><span class="toc-number">3.</span> <span class="toc-text">关于文献</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%E5%8F%8A%E6%9C%9F%E5%88%8A"><span class="toc-number">3.1.</span> <span class="toc-text">题目及期刊</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E8%80%85%E4%BF%A1%E6%81%AF"><span class="toc-number">3.2.</span> <span class="toc-text">作者信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E8%A1%A8%E6%97%B6%E9%97%B4"><span class="toc-number">3.3.</span> <span class="toc-text">发表时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%85%E8%AF%BB%E6%97%B6%E9%97%B4"><span class="toc-number">3.4.</span> <span class="toc-text">阅读时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="toc-number">3.5.</span> <span class="toc-text">开源代码</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By YuJiang's Long Holiday</div><div class="footer_custom_text">Hi, welcome to my <a target="_blank" rel="noopener" href="https://butterfly.js.org/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>
